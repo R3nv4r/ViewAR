@@ -1,0 +1,35 @@
+
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v7.0.0/dist/aframe-extras.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+    
+  </head>
+  <body>
+    <a-scene mindar-image="imageTargetSrc:http://localhost:8000/detonadores/pruebas.mind; filterMinCF:0.5; filterBeta: 100" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: true">
+     
+      <a-assets>
+        <!--modelo tiracruz-->
+        <a-asset-item id="tiracruz" src="http://localhost:8000/modelos/Tira_cruz.glb"></a-asset-item>
+        <!--modelo tambores-->
+        <a-asset-item id="tambores" src="http://localhost:8000/modelos/tamborileros.glb"></a-asset-item>
+      </a-assets>
+      
+      <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+
+      <!--detonadores-->
+      <a-entity mindar-image-target="targetIndex: 0">
+        <a-gltf-model src="#tiracruz" position="0 0 0" scale="0.05 0.05 0.05" rotation="0 -90 -30" animation-Mixer="clip:ArmatureAction.002">
+    </a-gltf-model>
+      </a-entity>
+
+      <a-entity mindar-image-target="targetIndex: 1">
+        <a-gltf-model src="#tambores" position="0 0 0" scale="0.05 0.05 0.05" rotation="0 -90 -30" animation-Mixer>
+    </a-gltf-model>
+      </a-entity>
+
+    </a-scene>
+  </body>
+</html>
