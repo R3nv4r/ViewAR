@@ -5,13 +5,17 @@
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-face-aframe.prod.js"></script>
   </head>
   <body>
+    <!--Detectar el rostro-->
     <a-scene mindar-face embedded color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
         
+<!--Modelos 3d en formato .gbl-->
 <a-assets>
     <a-asset-item id="glassesModel" src="http://localhost:8000/modelos/Tira_cruz.glb"></a-asset-item>
   </a-assets>
       <a-camera active="false" position="0 0 0"></a-camera>
+      <!--Se establece la seccion de la cara en el que aparecera el modelo 3d-->
       <a-entity mindar-face-target="anchorIndex: 10">
+      <!--Aqui se modifica la posicion escala y rotacion del modelo-->
     <a-gltf-model rotation="0 -90 -90" position="0 0 0" scale="0.02 0.02 0.02" src="#glassesModel"></a-gltf-model>
       </a-entity>
     </a-scene>
