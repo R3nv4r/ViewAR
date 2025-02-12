@@ -18,6 +18,8 @@
         <a-asset-item id="tiracruz" src="http://localhost:8000/modelos/Tira_cruz.glb"></a-asset-item>
         <!--modelo tambores-->
         <a-asset-item id="tambores" src="http://localhost:8000/modelos/tamborileros.glb"></a-asset-item>
+        <!--modelo flauta -->
+        <a-asset-item id="flauta" src="http://localhost:8000/modelos/flauta.glb"></a-asset-item>
       </a-assets>
       
       <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
@@ -31,6 +33,11 @@
 
       <a-entity mindar-image-target="targetIndex: 1">
         <a-gltf-model src="#tambores" position="0 0 0" scale="0.15 0.15 0.15" rotation="0 -90 -30" animation-Mixer>
+    </a-gltf-model>
+      </a-entity>
+
+      <a-entity mindar-image-target="targetIndex: 2">
+        <a-gltf-model src="#flauta" position="0 0 0" scale="0.15 0.15 0.15" rotation="0 -90 -30" animation-Mixer>
     </a-gltf-model>
       </a-entity>
 
