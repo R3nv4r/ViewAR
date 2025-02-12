@@ -1,6 +1,6 @@
 <html>
   <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-face-aframe.prod.js"></script>
   </head>
@@ -10,13 +10,13 @@
         
 <!--Modelos 3d en formato .gbl-->
 <a-assets>
-    <a-asset-item id="glassesModel" src="http://localhost:8000/modelos/Tira_cruz.glb"></a-asset-item>
+    <a-asset-item id="Mascara" src="http://localhost:8000/modelos/Mascara.glb"></a-asset-item>
   </a-assets>
       <a-camera active="false" position="0 0 0"></a-camera>
       <!--Se establece la seccion de la cara en el que aparecera el modelo 3d-->
-      <a-entity mindar-face-target="anchorIndex: 10">
+      <a-entity mindar-face-target="anchorIndex: 1">
       <!--Aqui se modifica la posicion escala y rotacion del modelo-->
-    <a-gltf-model rotation="0 -90 -90" position="0 0 0" scale="0.02 0.02 0.02" src="#glassesModel"></a-gltf-model>
+    <a-gltf-model rotation="0 180 0" position="0 0 -0.2" scale="0.4 0.35 0.35" src="#Mascara"></a-gltf-model>
       </a-entity>
     </a-scene>
   </body>
