@@ -1,18 +1,18 @@
 /* Estilos generales */
 body {
-    margin: 0;
+    margin: 20px 5px 10px 5px; /* Top, Right, Bottom, Left */
     padding: 0;
     font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+    background-color: #813535;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     height: 100vh;
-  }
+}
   
-  /* Contenedor de la escena AR */
-  #ar-container {
+/* Contenedor de la escena AR */
+#ar-container {
     width: 100%;
     height: 70vh;
     display: flex;
@@ -20,41 +20,68 @@ body {
     align-items: center;
     background: #fff;
     border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  }
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
   
-  /* Botones y controles */
-  .controls {
+/* Botones y controles */
+.menu-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.menu-container button {
+    display: block;
+    width: 80%; /* Adjust width as needed */
+    max-width: 300px; /* Optional: set a max width */
+    margin-bottom: 10px; /* Adjust margin for vertical alignment */
+    border: 2px solid #0056b3; /* Added border */
+    padding: 10px 15px;
+    background: #007bff;
+    color: white;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.menu-container button:hover {
+    background: #0056b3;
+}
+
+.controls {
     width: 100%;
     display: flex;
     justify-content: center;
     margin-top: 10px;
-  }
-  
-  button {
+    flex-direction: column;
+    position: absolute;
+    bottom: 20px;
+}
+
+button {
     background: #007bff;
     color: white;
     border: none;
     padding: 10px 15px;
-    margin: 5px;
-    border-radius: 5px;
+    margin: 10px; /* Adjust margin for vertical alignment */
+    border-radius: 10px;
     cursor: pointer;
     font-size: 16px;
-  }
-  
-  button:hover {
+}
+
+button:hover {
     background: #0056b3;
-  }
-  
-  /* Media Query para móviles */
-  @media (max-width: 600px) {
+}
+
+/* Media Query para móviles */
+@media (max-width: 600px) {
     #ar-container {
-      height: 60vh; /* Reducir la altura en pantallas pequeñas */
+        height: 60vh; /* Reducir la altura en pantallas pequeñas */
     }
-  
+
     button {
-      font-size: 14px;
-      padding: 8px 12px;
+        font-size: 18px;
+        padding: 32px 12px;
     }
-  }
-  
+}
