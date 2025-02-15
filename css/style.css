@@ -73,6 +73,38 @@ button {
 button:hover {
     background: #0056b3;
 }
+/* Specific styles for Face.html buttons */
+#return-button {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+#return-button:hover {
+  color: #0056b3;
+}
+/* Specific styles for Face.html buttons */
+#save-button {
+  width: 80%; /* Adjust width as needed */
+  max-width: 300px; /* Optional: set a max width */
+  margin-bottom: 10px; /* Adjust margin for vertical alignment */
+  border: 2px solid #0056b3; /* Added border */
+  padding: 10px 15px;
+  background: #007bff;
+  color: white;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+#save-button:hover {
+  background: #0056b3;
+}
 
 /* Media Query para móviles */
 @media (max-width: 600px) {
