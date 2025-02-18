@@ -16,7 +16,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Ensure the canvas is rendered before capturing
-    scene.renderer.render(scene.object3D, scene.camera);
+    scene.renderer.render(scene.object3D);
+    scene.renderer.render(scene.camera, scene.object3D);
     
     canvas.toBlob(function(blob) {
       if (!blob) {
