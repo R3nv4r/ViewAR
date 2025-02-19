@@ -1,0 +1,15 @@
+document.addEventListener('DOMContentLoaded', function() {
+    const saveButton = document.getElementById('save-button');
+    const downloadLink = document.getElementById('download-link');
+  
+    saveButton.addEventListener('click', function() {
+      const scene = document.querySelector('a-scene');
+      const canvas = scene.renderer.domElement;
+      canvas.toBlob(function(blob) {
+        const url = URL.createObjectURL(blob);
+        downloadLink.href = url;
+        downloadLink.download = 'captura.png';
+        downloadLink.click();
+      });
+    });
+  });

@@ -1,0 +1,122 @@
+
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/css/camera.css"> <!-- Link to the existing CSS file -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- Link to Font Awesome -->
+
+    <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v7.0.0/dist/aframe-extras.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+    <!--script src="../js/captura.js"></script-->
+  </head>
+   <!--Los enlaces para usar los modelos deben guardarse en un servidor externo ya que el programa no puede cargar los modelos de manera
+  local, como un medio de prueba se esta utilizando un host local-->
+  <body>
+    <a-scene mindar-image="imageTargetSrc: https://r3nv4r.github.io/ViewAR/targets.mind; filterMinCF:0.5; filterBeta: 100" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: true">
+     
+      <a-assets>
+        <!--modelo tiracruz-->
+        <a-asset-item id="tiracruz" src="https://r3nv4r.github.io/ViewAR/assets/Tira_cruz.glb"></a-asset-item>
+        <!--modelo tambores-->
+        <a-asset-item id="tambores" src="https://r3nv4r.github.io/ViewAR/assets/tamborileros.glb"></a-asset-item>
+        <!--modelo flauta -->
+        <a-asset-item id="flauta" src="https://r3nv4r.github.io/ViewAR/assets/flauta.glb"></a-asset-item>
+      </a-assets>
+      
+      <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+
+      <!--detonadores, aqui se modifica el tamaño, posicion y la rotacion del modelo para ajustar, para identificar los modelos con 
+      sus detonadores es con targetIndex: "#" iniciando del 0, el orden sera segun como se compilo en la pagina los detonadores -->
+      <a-entity mindar-image-target="targetIndex: 0">
+        <a-gltf-model src="#tiracruz" position="0 0 0" scale="0.05 0.05 0.05" rotation="0 -90 -30" animation-Mixer>
+    </a-gltf-model>
+      </a-entity>
+
+      <a-entity mindar-image-target="targetIndex: 1">
+        <a-gltf-model src="#tambores" position="0 0 0" scale="0.15 0.15 0.15" rotation="0 -90 -30" animation-Mixer>
+    </a-gltf-model>
+      </a-entity>
+
+      <a-entity mindar-image-target="targetIndex: 2">
+        <a-gltf-model src="#flauta" position="0 0 0" scale="0.5 0.5 0.5" rotation="0 -90 -30" animation-Mixer>
+    </a-gltf-model>
+      </a-entity>
+
+      
+    </a-scene>
+    <!-- Return button as an icon -->
+    <button id="return-button" onclick="window.location.href='/Index.html'">
+      <i class="fas fa-arrow-left"></i>
+    </button>
+
+    <!-- Save button -->
+    <div class="controls">
+      <button id="save-button">Save</button>
+      <a id="download-link" style="display: none">Descargar Imagen</a>
+    </div>
+
+
+
+
+   <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const saveButton = document.getElementById('save-button');
+        const downloadLink = document.getElementById('download-link');
+
+        saveButton.addEventListener('click', function() {
+          const scene = document.querySelector('a-scene');
+          if (!scene) {
+            console.error('A-Frame scene not found');
+            return;
+          }
+
+          const canvas = scene.renderer.domElement;
+          if (!canvas) {
+            console.error('Canvas not found');
+            return;
+          }
+
+          // Get the video element from the camera feed
+          const video = document.querySelector('video');
+          if (!video) {
+            console.error('Video element not found');
+            return;
+          }
+
+          // Ensure the canvas is rendered before capturing
+          scene.renderer.render(scene.object3D, scene.camera);
+
+          // Create a temporary canvas to draw the video feed
+          const tempCanvas = document.createElement('canvas');
+          tempCanvas.width = canvas.width;
+          tempCanvas.height = canvas.height;
+          const tempContext = tempCanvas.getContext('2d');
+          
+         
+
+          // Draw the video feed onto the temporary canvas (background)
+          tempContext.drawImage(video, 0, 0, tempCanvas.width, tempCanvas.height);
+
+        
+
+          // Draw the AR scene onto the temporary canvas (foreground)
+          tempContext.drawImage(canvas, 0, 0, tempCanvas.width, tempCanvas.height);
+
+          // Convert the temporary canvas to a blob and save the image
+          tempCanvas.toBlob(function(blob) {
+            if (!blob) {
+              console.error('Failed to capture canvas');
+              return;
+            }
+
+            const url = URL.createObjectURL(blob);
+            downloadLink.href = url;
+            downloadLink.download = 'captura.png';
+            downloadLink.click();
+          }, 'image/png');
+        });
+      });
+    </script>    
+  </body>
+</html>
