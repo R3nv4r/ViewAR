@@ -9,9 +9,14 @@
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-face-aframe.prod.js"></script>
     <script src="../js/captura.js"></script> <!-- Link to the external JavaScript file -->
   </head>
+  <style>
+    .a-enter-vr-button {
+      display: none !important;
+    }
+  </style>
   <body>
     <!--Detectar el rostro-->
-    <a-scene mindar-face embedded color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
+    <a-scene mindar-face  color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
         
       <!--Modelos 3d en formato .gbl-->
       <a-assets>
