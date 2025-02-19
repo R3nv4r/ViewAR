@@ -1,11 +1,12 @@
-/* Estilos generales */
+/* General styles */
 body {
-    
+    margin: 0;
+    padding: 0;
     font-family: Arial, sans-serif;
-   
+    background-color: #813535;
     display: flex;
     flex-direction: column;
- 
+    align-items: center;
     justify-content: center;
     height: 100vh;
 }
@@ -18,19 +19,21 @@ a-scene {
     height: 100%;
 }
 
-/* Contenedor de la escena AR */
+/* AR container */
 #ar-container {
     position:relative;
     width: 100%;
     height: 70vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     overflow: hidden;
-   
     background: #fff;
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
   
-/* Botones y controles */
+/* Buttons and controls */
 .menu-container {
     display: flex;
     flex-direction: column;
@@ -61,7 +64,7 @@ a-scene {
     display: flex;
     justify-content: center;
     margin-top: 10px;
-    flex-direction: row;
+    flex-direction: column;
     position: absolute;
     bottom: 20px;
     z-index: 10; /* Ensure controls are above the AR scene */
@@ -117,14 +120,14 @@ button:hover {
     background: #0056b3;
 }
 
-/* Media Query para móviles */
+/* Media Query for mobile devices */
 @media (max-width: 600px) {
     #ar-container {
         height: 60vh; /* Reducir la altura en pantallas pequeñas */
     }
 
     button {
-        font-size: 18px;
-        padding: 32px 12px;
+        font-size: 14px;
+        padding: 8px 12px;
     }
 }
