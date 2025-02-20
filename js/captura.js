@@ -1,4 +1,3 @@
-
 document.addEventListener('DOMContentLoaded', function() {
   const saveButton = document.getElementById('save-button');
   const downloadLink = document.getElementById('download-link');
