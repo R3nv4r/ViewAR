@@ -32,7 +32,22 @@ a-scene {
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
-  
+#video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+  }
+  #canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+  }
 /* Buttons and controls */
 .menu-container {
     display: flex;
@@ -130,4 +145,8 @@ button:hover {
         font-size: 14px;
         padding: 8px 12px;
     }
+    a-gltf-model {
+        scale: 0.3 0.3 0.3;
+        position: 0 0 -0.1;
+      }
 }
