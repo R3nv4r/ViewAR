@@ -18,7 +18,7 @@
   </style>
   <body>
     <!--Detectar el rostro-->
-    <a-scene mindar-face="ui: false ; filterMinCF: 0.1; filterBeta: 50" fullscreen  color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
+    <a-scene mindar-face fullscreen  color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: true">
         
       <!--Modelos 3d en formato .gbl-->
       <a-assets>
@@ -29,7 +29,7 @@
       <!--Se establece la seccion de la cara en el que aparecera el modelo 3d-->
       <a-entity mindar-face-target="anchorIndex: 1">
         <!--Aqui se modifica la posicion escala y rotacion del modelo-->
-        <a-gltf-model rotation="0 180 0" position="0 0 -0.2" scale="0.4 0.4 0.4" src="#Mascara"></a-gltf-model>
+        <a-gltf-model rotation="0 180 0" position="0 0 0" scale="0.4 0.4 0.4" src="#Mascara"></a-gltf-model>
       </a-entity>
 
     </a-scene>
@@ -105,28 +105,6 @@
         });
       });
     </script>
-
-
-
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-  const model = document.getElementById("faceModel");
-
-  function adjustPosition() {
-    const isMobile = window.innerWidth < 768;
-    
-    // Ajusta la posición en móviles
-    if (isMobile) {
-      model.setAttribute("position", "0 0 -0.4");
-    } else {
-      model.setAttribute("position", "0 0 -0.2");
-    }
-  }
-
-  adjustPosition();
-  window.addEventListener("resize", adjustPosition);
-});
-</script>
 
 
 
