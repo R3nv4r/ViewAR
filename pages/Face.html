@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1 user-scalable=no" />
     <title>Face</title>
     <link rel="stylesheet" href="../css/camera.css"> <!-- Link to the existing CSS file -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- sujeto a cambios -->
@@ -27,11 +27,11 @@
 
       <a-camera active="false" position="0 0 0"></a-camera>
       <!--Se establece la seccion de la cara en el que aparecera el modelo 3d-->
-      <a-entity mindar-face-target="anchorIndex: 1">
+      <a-entity mindar-face-target="anchorIndex: 0">
         <!--Aqui se modifica la posicion escala y rotacion del modelo-->
         <a-gltf-model rotation="0 180 0" position="0 0 -0.2" scale="0.4 0.4 0.4" src="#Mascara"></a-gltf-model>
       </a-entity>
-      
+
     </a-scene>
 
     <!-- Return button as an icon -->
