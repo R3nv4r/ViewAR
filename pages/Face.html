@@ -5,38 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
     <title>Face</title>
     <link rel="stylesheet" href="../css/camera.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"><!--sujeto a cambio-->
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-face-aframe.prod.js"></script>
     <style>
       body {
         margin: 0;
       }
-      .example-container {
-        overflow: hidden;
-        position: absolute;
-        width: 100%;
-        height: 100%;
-      }
-      .options-panel {
-        position: fixed;
-        left: 0;
-        top: 0;
-        z-index: 2;
-      }
-      .options-panel img {
-        border: solid 2px;
-        width: 50px;
-        height: 50px;
-        object-fit: cover;
-        cursor: pointer;
-      }
-      .options-panel img.selected {
-        border-color: green;
-      }
-      .a-enter-vr-button {
-        display: none !important;
-      }
+
     </style>
   </head>
   <body>
@@ -58,15 +34,10 @@
         <a-camera active="false" position="0 0 0" look-controls="enabled: false"></a-camera>
 
         <!-- Modelos 3D sobre la cara -->
-        <a-entity mindar-face-target="anchorIndex: 168">
+        <a-entity mindar-face-target="anchorIndex: 1">
           <a-gltf-model rotation="0 180 0" position="0 0 0" scale="0.4 0.4 0.4" src="#Mascara"></a-gltf-model>
         </a-entity>
-        <a-entity mindar-face-target="anchorIndex: 168">
-          <a-gltf-model rotation="0 0 0" position="0 0 -0.3" scale="0.35 0.35 0.35" src="#glassesModel" class="glasses1-entity" visible="false"></a-gltf-model>
-        </a-entity>
-        <a-entity mindar-face-target="anchorIndex: 168">
-          <a-gltf-model rotation="0 0 0" position="0 -0.3 -0.3" scale="0.6 0.6 0.6" src="#glassesModel2" class="glasses2-entity" visible="false"></a-gltf-model>
-        </a-entity>
+        
       </a-scene>
     </div>
 

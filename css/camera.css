@@ -32,6 +32,7 @@ a-scene {
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
+
 #video {
     position: absolute;
     top: 0;
@@ -150,3 +151,31 @@ button:hover {
         position: 0 0 -0.1;
       }
 }
+body {
+        margin: 0;
+      }
+      .example-container {
+        overflow: hidden;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+      }
+      .options-panel {
+        position: fixed;
+        left: 0;
+        top: 0;
+        z-index: 2;
+      }
+      .options-panel img {
+        border: solid 2px;
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+        cursor: pointer;
+      }
+      .options-panel img.selected {
+        border-color: green;
+      }
+      .a-enter-vr-button {
+        display: none !important;
+      }
