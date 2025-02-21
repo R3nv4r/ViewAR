@@ -105,5 +105,27 @@
         });
       });
     </script>
+
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    function adjustScale() {
+      const model = document.getElementById("model");
+      const screenWidth = window.innerWidth;
+      
+      // Escalar en función del ancho de pantalla (ajusta el valor según pruebas)
+      const scaleFactor = screenWidth < 600 ? 0.3 : 0.4;
+      model.setAttribute("scale", `${scaleFactor} ${scaleFactor} ${scaleFactor}`);
+    }
+
+    // Ajustar el tamaño al cargar y cuando se cambia el tamaño de la ventana
+    adjustScale();
+    window.addEventListener("resize", adjustScale);
+  });
+</script>
+
+
+
   </body>
 </html>
