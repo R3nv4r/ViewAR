@@ -1,4 +1,3 @@
-
 body {
     margin: 0;
     padding: 0;
@@ -10,8 +9,8 @@ body {
     justify-content: center;
     height: 100vh;
 }
-  
-a-scene {
+
+a-scene, #video, .input_video, .output_canvas {
     position: absolute;
     top: 0;
     left: 0;
@@ -19,9 +18,8 @@ a-scene {
     height: 100%;
 }
 
-/* AR contenedor */
-#ar-container {
-    position:relative;
+#ar-container, .container {
+    position: relative;
     width: 100%;
     height: 70vh;
     display: flex;
@@ -33,75 +31,40 @@ a-scene {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
-#video {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
-  }
-  #canvas {
-    position: absolute;
-    top: 0;
-    left: 0;
+#canvas {
     width: 100vw !important;
     height: 100vh !important;
     z-index: 1;
-  }
-/* botones y controles */
-.menu-container {
+}
+
+.menu-container, .controls {
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 100%;
-}
-
-.menu-container button {
-    display: block;
-    width: 80%; 
-    max-width: 300px; 
-    margin-bottom: 10px; 
-    border: 2px solid #0056b3; 
-    padding: 10px 15px;
-    background: #007bff;
-    color: white;
-    border-radius: 10px;
-    cursor: pointer;
-    font-size: 16px;
-}
-
-.menu-container button:hover {
-    background: #0056b3;
-}
-
-.controls {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    margin-top: 10px;
-    flex-direction: column;
     position: absolute;
     bottom: 20px;
-    z-index: 10; 
+    z-index: 10;
 }
 
-button {
+.menu-container button, button {
+    display: block;
+    width: 80%;
+    max-width: 300px;
+    margin-bottom: 10px;
+    border: 2px solid #0056b3;
+    padding: 10px 15px;
     background: #007bff;
     color: white;
-    border: none;
-    padding: 10px 15px;
-    margin: 10px; 
     border-radius: 10px;
     cursor: pointer;
     font-size: 16px;
 }
 
-button:hover {
+button:hover, .menu-container button:hover, #save-button:hover {
     background: #0056b3;
 }
 
-/* botones para Face.html  */
 #return-button {
     position: absolute;
     top: 10px;
@@ -111,7 +74,7 @@ button:hover {
     color: white;
     font-size: 24px;
     cursor: pointer;
-    z-index: 10; 
+    z-index: 10;
 }
 
 #return-button:hover {
@@ -119,84 +82,59 @@ button:hover {
 }
 
 #save-button {
-    width: 30%; 
-    max-width: 300px; 
-    margin-bottom: 10px; 
-    
+    width: 30%;
+    max-width: 300px;
     padding: 30px 15px;
     background: #798ea5;
     color: white;
     border-radius: 10px;
     cursor: pointer;
     font-size: 16px;
-    z-index: 10; 
+    z-index: 10;
 }
 
-#save-button:hover {
-    background: #0056b3;
-}
-
-/* Media Query para moviles */
 @media (max-width: 600px) {
     #ar-container {
-        height: 60vh; /* Reducir la altura en pantallas pequeñas */
+        height: 60vh;
     }
 
     button {
         font-size: 14px;
         padding: 8px 12px;
     }
+
     a-gltf-model {
         scale: 0.3 0.3 0.3;
         position: 0 0 -0.1;
-      }
+    }
 }
-body {
-        margin: 0;
-      }
-      .example-container {
-        overflow: hidden;
-        position: absolute;
-        width: 100%;
-        height: 100%;
-      }
-      .options-panel {
-        position: fixed;
-        left: 0;
-        top: 0;
-        z-index: 2;
-      }
-      .options-panel img {
-        border: solid 2px;
-        width: 50px;
-        height: 50px;
-        object-fit: cover;
-        cursor: pointer;
-      }
-      .options-panel img.selected {
-        border-color: green;
-      }
-      .a-enter-vr-button {
-        display: none !important;
-      }
 
-      /* camera.css */
-.input_video {
-    display: none;
-  }
-  
-  .container {
-    position: relative;
-    width: 100vw;
-    height: 100vh;
+.example-container, .options-panel {
     overflow: hidden;
-  }
-  
-  .input_video, .output_canvas {
     position: absolute;
-    top: 0;
-    left: 0;
     width: 100%;
     height: 100%;
+}
+
+.options-panel {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 2;
+}
+
+.options-panel img {
+    border: solid 2px;
+    width: 50px;
+    height: 50px;
     object-fit: cover;
-  }
+    cursor: pointer;
+}
+
+.options-panel img.selected {
+    border-color: green;
+}
+
+.a-enter-vr-button {
+    display: none !important;
+}
