@@ -1,135 +1,105 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="../css/camera.css"> <!-- Link to the existing CSS file -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- Link to Font Awesome cambiar para evitar copy -->
+<head>
+  <meta charset="utf-8">
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+  <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+  <style>
+    .input_video {
+      display: none;
+    }
+      </style>
+</head>
+<body>
+  <div class="container">
+    <video class="input_video" autoplay playsinline muted></video>
+    <canvas class="output_canvas" width="1280px" height="720px"></canvas>
+  </div>
+
+  <a-scene>
+    <a-assets>
+      <a-asset-item id="objeto3d" src="https://r3nv4r.github.io/ViewAR/assets/Mascara.glb"></a-asset-item>
+    </a-assets>
+    <a-camera position="0 1.6 3"></a-camera>
+    <a-entity id="hand-model" visible="false">
+      <a-gltf-model src="#objeto3d" scale="0.5 0.5 0.5"></a-gltf-model>
+    </a-entity>
+  </a-scene>
+
+  <script type="module">
+    const videoElement = document.getElementsByClassName('input_video')[0];
+    const canvasElement = document.getElementsByClassName('output_canvas')[0];
+    const canvasCtx = canvasElement.getContext('2d');
     
-    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands"></script>
-    <script src="../js/captura.js"></script> 
-    <style>
-      .a-enter-vr-button {
-        display: none !important;
+    function onResults(results) {
+      canvasCtx.save();
+      canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
+      canvasCtx.drawImage(videoElement, 0, 0, canvasElement.width, canvasElement.height);
+      if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
+        for (const landmarks of results.multiHandLandmarks) {
+          window.drawConnectors(canvasCtx, landmarks, window.HAND_CONNECTIONS, {color: '#00FF00', lineWidth: 5});
+          window.drawLandmarks(canvasCtx, landmarks, {color: '#FF0000', lineWidth: 2});
+        }
+
+        // Detect an open palm gesture
+        const handModel = document.getElementById('hand-model');
+        const landmarks = results.multiHandLandmarks[0];
+        const isOpenPalm = landmarks[8].y < landmarks[6].y && // Index finger
+                           landmarks[12].y < landmarks[10].y && // Middle finger
+                           landmarks[16].y < landmarks[14].y && // Ring finger
+                           landmarks[20].y < landmarks[18].y;   // Pinky finger
+
+        // Show the model if the hand is an open palm
+        handModel.setAttribute('visible', isOpenPalm);
+
+        
+        const palmCenter = {
+        x: (landmarks[0].x + landmarks[5].x) / 2,  // Promedio entre la muñeca y el inicio del dedo índice
+        y: (landmarks[0].y + landmarks[5].y) / 2,
+        z: (landmarks[0].z + landmarks[5].z) / 2
+};
+
+        const x = (palmCenter.x - 0.5) * 3;
+        const y = (0.5 - palmCenter.y) * 2;
+        const z = -1 * (palmCenter.z + 0.5);
+        const depthFactor = Math.max(0.1, 1 - palmCenter.z); // Escalar basado en profundidad
+      
+      handModel.setAttribute('scale', `${depthFactor} ${depthFactor} ${depthFactor}`);
+
+
+      handModel.setAttribute('position', `${x} ${y} ${z}`);
+      
+
+        
+      } else {
+        // Hide the model if no hand is detected
+        const handModel = document.getElementById('hand-model');
+        handModel.setAttribute('visible', false);
       }
-      #video {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: -1;
-      }
-      #canvas {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 1;
-      }
-    </style>
-  </head>
-  <body>
-    <a-scene webxr="requiredFeatures: hand-tracking">
-      <a-assets>
-        <a-asset-item id="objeto3d" src="../assets/flauta.glb"></a-asset-item>
-      </a-assets>
-
-      <a-camera position="0 1.6 3"></a-camera>
-      <a-entity id="hand-model" visible="false">
-        <<a-sphere color="green" radius="0.1"></a-sphere>
-      </a-entity>
-    </a-scene>
-
-    <!-- Add the video and canvas elements to the HTML -->
-    <video id="video" autoplay></video>
-    <canvas id="canvas"></canvas>
-
-    <!-- Return button as an icon -->
-    <button id="return-button" onclick="window.location.href='../Index.html'">
-      <i class="fas fa-arrow-left"></i>
-    </button>
-
-    <!-- Save button -->
-    <div class="controls">
-      <button id="save-button">Save</button>
-      <a id="download-link" style="display: none">Descargar Imagen</a>
-    </div>
-    <script>
-      async function initHandTracking() {
-        console.log('Initializing hand tracking...');
-        const hands = new Hands({ locateFile: file => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}` });
-        hands.setOptions({ maxNumHands: 1, modelComplexity: 1 });
-
-        const video = document.getElementById('video');
-        const canvas = document.getElementById('canvas');
-        const ctx = canvas.getContext('2d');
-        video.width = 640;
-        video.height = 480;
-        canvas.width = 640;
-        canvas.height = 480;
-
-        navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
-          console.log('Camera stream started');
-          video.srcObject = stream;
-          video.play();
-        }).catch(error => {
-          console.error('Error accessing the camera: ', error);
-        });
-
-        hands.onResults(results => {
-          console.log('Hand tracking results:', results);
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-          ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-          if (results.multiHandLandmarks.length > 0) {
-            let landmarks = results.multiHandLandmarks[0];
-
-            // Draw landmarks
-            ctx.fillStyle = 'red';
-            for (let i = 0; i < landmarks.length; i++) {
-              let x = landmarks[i].x * canvas.width;
-              let y = landmarks[i].y * canvas.height;
-              ctx.beginPath();
-              ctx.arc(x, y, 5, 0, 2 * Math.PI);
-              ctx.fill();
-            }
-
-            // Detect if the hand is open (fingers extended)
-            let isOpen = landmarks[8].y < landmarks[6].y && // Index
-                         landmarks[12].y < landmarks[10].y && // Middle
-                         landmarks[16].y < landmarks[14].y && // Ring
-                         landmarks[20].y < landmarks[18].y;   // Pinky
-
-            // Show the model if the hand is open
-            const handModel = document.getElementById('hand-model');
-            handModel.setAttribute('visible', isOpen);
-          }
-        });
-
-        const camera = new Camera(video, {
-          onFrame: async () => {
-            await hands.send({ image: video });
-          }
-        });
-        camera.start();
-        console.log('Hand tracking initialized');
-      }
-
-      initHandTracking();
-
-      AFRAME.registerComponent("detect-open-hand", {
-        init: function () {
-          this.el.addEventListener("hand-tracking-extras-pinchend", () => {
-            console.log("La mano está abierta");
-          });
-
-          this.el.addEventListener("hand-tracking-extras-pinchstarted", () => {
-            console.log("La mano se cerró");
-          });
-        },
-      });
-    </script>
-  </body>
+      canvasCtx.restore();
+    }
+    
+    const hands = new Hands({locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`});
+   
+    hands.setOptions({
+      maxNumHands: 1,
+      modelComplexity: 1,
+      minDetectionConfidence: 0.5,
+      minTrackingConfidence: 0.5
+    });
+    hands.onResults(onResults);
+    
+    const camera = new Camera(videoElement, {
+      onFrame: async () => {
+        await hands.send({image: videoElement});
+      },
+      width: 1280,
+      height: 720
+    });
+    camera.start();
+  </script>
+</body>
 </html>
