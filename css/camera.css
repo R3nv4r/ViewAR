@@ -1,4 +1,4 @@
-/* General styles */
+
 body {
     margin: 0;
     padding: 0;
@@ -19,7 +19,7 @@ a-scene {
     height: 100%;
 }
 
-/* AR container */
+/* AR contenedor */
 #ar-container {
     position:relative;
     width: 100%;
@@ -49,7 +49,7 @@ a-scene {
     height: 100vh !important;
     z-index: 1;
   }
-/* Buttons and controls */
+/* botones y controles */
 .menu-container {
     display: flex;
     flex-direction: column;
@@ -59,10 +59,10 @@ a-scene {
 
 .menu-container button {
     display: block;
-    width: 80%; /* Adjust width as needed */
-    max-width: 300px; /* Optional: set a max width */
-    margin-bottom: 10px; /* Adjust margin for vertical alignment */
-    border: 2px solid #0056b3; /* Added border */
+    width: 80%; 
+    max-width: 300px; 
+    margin-bottom: 10px; 
+    border: 2px solid #0056b3; 
     padding: 10px 15px;
     background: #007bff;
     color: white;
@@ -83,7 +83,7 @@ a-scene {
     flex-direction: column;
     position: absolute;
     bottom: 20px;
-    z-index: 10; /* Ensure controls are above the AR scene */
+    z-index: 10; 
 }
 
 button {
@@ -91,7 +91,7 @@ button {
     color: white;
     border: none;
     padding: 10px 15px;
-    margin: 10px; /* Adjust margin for vertical alignment */
+    margin: 10px; 
     border-radius: 10px;
     cursor: pointer;
     font-size: 16px;
@@ -101,7 +101,7 @@ button:hover {
     background: #0056b3;
 }
 
-/* Specific styles for Face.html buttons */
+/* botones para Face.html  */
 #return-button {
     position: absolute;
     top: 10px;
@@ -111,7 +111,7 @@ button:hover {
     color: white;
     font-size: 24px;
     cursor: pointer;
-    z-index: 10; /* Ensure return button is above the AR scene */
+    z-index: 10; 
 }
 
 #return-button:hover {
@@ -119,9 +119,9 @@ button:hover {
 }
 
 #save-button {
-    width: 30%; /* Adjust width as needed */
-    max-width: 300px; /* Optional: set a max width */
-    margin-bottom: 10px; /* Adjust margin for vertical alignment */
+    width: 30%; 
+    max-width: 300px; 
+    margin-bottom: 10px; 
     
     padding: 30px 15px;
     background: #798ea5;
@@ -129,14 +129,14 @@ button:hover {
     border-radius: 10px;
     cursor: pointer;
     font-size: 16px;
-    z-index: 10; /* Ensure save button is above the AR scene */
+    z-index: 10; 
 }
 
 #save-button:hover {
     background: #0056b3;
 }
 
-/* Media Query for mobile devices */
+/* Media Query para moviles */
 @media (max-width: 600px) {
     #ar-container {
         height: 60vh; /* Reducir la altura en pantallas pequeñas */
