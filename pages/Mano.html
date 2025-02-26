@@ -10,10 +10,29 @@
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+  <script>
+    window.drawConnectors = window.drawConnectors || drawingUtils.drawConnectors;
+    window.drawLandmarks = window.drawLandmarks || drawingUtils.drawLandmarks;
+    window.HAND_CONNECTIONS = window.HAND_CONNECTIONS || hands.HAND_CONNECTIONS;
+  </script>
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
   <style>
     .input_video {
       display: none;
+    }
+    .container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+    .input_video, .output_canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
   </style>
 </head>
