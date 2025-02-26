@@ -105,13 +105,14 @@
     hands.onResults(onResults);
     
     const camera = new Camera(videoElement, {
-      onFrame: async () => {
-        await hands.send({image: videoElement});
-      },
-      width: 1280,
-      height: 720
-    });
-    camera.start();
+  onFrame: async () => {
+    await hands.send({ image: videoElement });
+  },
+  width: 1280,
+  height: 720,
+  facingMode: 'environment' // Fuerza la cámara trasera en dispositivos móviles
+});
+camera.start();
   </script>
 </body>
 </html>
