@@ -19,7 +19,7 @@ a-scene, #video, .input_video, .output_canvas {
 }
 
 #ar-container, .container {
-    position: relative;
+    position: absolute;
     width: 100%;
     height: 70vh;
     display: flex;
