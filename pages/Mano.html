@@ -15,7 +15,7 @@
     .input_video {
       display: none;
     }
-      </style>
+  </style>
 </head>
 <body>
   <div class="container">
@@ -33,13 +33,10 @@
     </a-entity>
   </a-scene>
 
-
   <!-- Botón de retorno -->
   <button id="return-button" onclick="window.location.href='../Index.html'">
     <i class="fas fa-arrow-left"></i>
   </button>
-
-
 
   <script type="module">
     const videoElement = document.getElementsByClassName('input_video')[0];
@@ -67,25 +64,19 @@
         // Show the model if the hand is an open palm
         handModel.setAttribute('visible', isOpenPalm);
 
-        
         const palmCenter = {
-        x: (landmarks[0].x + landmarks[5].x) / 2,  // Promedio entre la muñeca y el inicio del dedo índice
-        y: (landmarks[0].y + landmarks[5].y) / 2,
-        z: (landmarks[0].z + landmarks[5].z) / 2
-};
+          x: (landmarks[0].x + landmarks[5].x) / 2,  // Average between the wrist and the base of the index finger
+          y: (landmarks[0].y + landmarks[5].y) / 2,
+          z: (landmarks[0].z + landmarks[5].z) / 2
+        };
 
         const x = (palmCenter.x - 0.5) * 3;
         const y = (0.5 - palmCenter.y) * 2;
         const z = -1 * (palmCenter.z + 0.5);
-        const depthFactor = Math.max(0.1, 1 - palmCenter.z); // Escalar basado en profundidad
-      
-      handModel.setAttribute('scale', `${depthFactor} ${depthFactor} ${depthFactor}`);
+        const depthFactor = Math.max(0.1, 1 - palmCenter.z); // Scale based on depth
 
-
-      handModel.setAttribute('position', `${x} ${y} ${z}`);
-      
-
-        
+        handModel.setAttribute('scale', `${depthFactor} ${depthFactor} ${depthFactor}`);
+        handModel.setAttribute('position', `${x} ${y} ${z}`);
       } else {
         // Hide the model if no hand is detected
         const handModel = document.getElementById('hand-model');
@@ -95,7 +86,6 @@
     }
     
     const hands = new Hands({locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`});
-   
     hands.setOptions({
       maxNumHands: 1,
       modelComplexity: 1,
@@ -105,14 +95,14 @@
     hands.onResults(onResults);
     
     const camera = new Camera(videoElement, {
-  onFrame: async () => {
-    await hands.send({ image: videoElement });
-  },
-  width: 1280,
-  height: 720,
-  facingMode: 'environment' // Fuerza la cámara trasera en dispositivos móviles
-});
-camera.start();
+      onFrame: async () => {
+        await hands.send({image: videoElement});
+      },
+      width: 1280,
+      height: 720,
+      facingMode: 'environment' // Force the rear camera on mobile devices
+    });
+    camera.start();
   </script>
 </body>
 </html>
