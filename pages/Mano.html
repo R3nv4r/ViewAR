@@ -139,8 +139,8 @@
         const dz = landmarks[9].z - landmarks[0].z; // Diferencia en Z para profundidad
 
         // Calcular ángulos en grados
-        const yaw = Math.atan2(dy, dx) * (180 / Math.PI); // Rotación en el eje Y (giro horizontal)
-        const pitch = Math.atan2(dz, Math.sqrt(dx * dx + dy * dy)) * (180 / Math.PI); // Rotación en el eje X (inclinación vertical)
+        const yaw = -Math.atan2(dy, dx) * (180 / Math.PI); // Rotación en el eje Y (giro horizontal)
+        const pitch = -Math.atan2(dz, Math.sqrt(dx * dx + dy * dy)) * (180 / Math.PI); // Rotación en el eje X (inclinación vertical)
 
         // Suavizar la rotación para evitar saltos bruscos (usando una interpolación simple)
         const currentRotation = handModel.getAttribute('rotation') || { x: 0, y: 0, z: 0 };
