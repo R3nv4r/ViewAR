@@ -28,6 +28,11 @@
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
   
 </head>
+
+<div id="instructions" style="position: absolute; color: white; top: 10px;">
+  Abre la palma para mostrar el objeto 3D.
+</div>
+
 <body>
   <div class="container">
     <video class="input_video" autoplay playsinline muted></video>
@@ -40,7 +45,7 @@
     </a-assets>
     <a-camera position="0 1.6 3"></a-camera>
     <a-entity id="hand-model" visible="false">
-      <a-gltf-model src="#objeto3d" scale="0.5 0.5 0.5"></a-gltf-model>
+      <a-gltf-model src="#objeto3d" ></a-gltf-model>
     </a-entity>
   </a-scene>
 
@@ -110,6 +115,16 @@ const palmCenter = {
 const x = (palmCenter.x - 0.5) * 3;
 const y = (0.5 - palmCenter.y) * 2;
 const z = -1 * (palmCenter.z + 0.5);
+const distance = Math.sqrt(
+  Math.pow(landmarks[0].x - landmarks[9].x, 2) +
+  Math.pow(landmarks[0].y - landmarks[9].y, 2)
+);
+const scale = distance * 2; // Ajusta el factor según necesites
+handModel.setAttribute('scale', `${scale} ${scale} ${scale}`);
+
+const isClosedFist = landmarks[8].y > landmarks[6].y && // Dedo índice
+                     landmarks[12].y > landmarks[10].y; // Dedo medio
+handModel.setAttribute('visible', !isClosedFist);
 
 // Aplicar la posición al objeto 3D
 handModel.setAttribute('position', `${x} ${y} ${z}`);
@@ -125,7 +140,7 @@ handModel.setAttribute('position', `${x} ${y} ${z}`);
     const hands = new Hands({locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`});
     hands.setOptions({
       maxNumHands: 1,
-      modelComplexity: 1,
+      modelComplexity: 0,
       minDetectionConfidence: 0.5,
       minTrackingConfidence: 0.5
     });
@@ -135,8 +150,8 @@ handModel.setAttribute('position', `${x} ${y} ${z}`);
       onFrame: async () => {
         await hands.send({image: videoElement});
       },
-      width: 1280,
-      height: 720,
+      width: 640,
+      height: 480,
       facingMode: 'environment' // Force the rear camera on mobile devices
     });
     camera.start();

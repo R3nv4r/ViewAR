@@ -84,12 +84,12 @@ button:hover, .menu-container button:hover, #save-button:hover {
 #save-button {
     width: 30%;
     max-width: 300px;
-    padding: 30px 15px;
+    padding: 15px;
     background: #798ea5;
     color: white;
     border-radius: 10px;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 18px;
     z-index: 10;
 }
 
