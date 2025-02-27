@@ -70,6 +70,9 @@
         // Show the model if the hand is an open palm
         handModel.setAttribute('visible', isOpenPalm);
 
+        const palmBase = landmarks [0];
+        const indexBase = landmarks[9]; // Base del dedo índice
+
         const palmCenter = {
           x: (landmarks[0].x + landmarks[5].x) / 2,  // Average between the wrist and the base of the index finger
           y: (landmarks[0].y + landmarks[5].y) / 2,
