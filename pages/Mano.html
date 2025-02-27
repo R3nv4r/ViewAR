@@ -70,7 +70,7 @@
         // Show the model if the hand is an open palm
         handModel.setAttribute('visible', isOpenPalm);
 
-        const palmBase = landmarks [0];
+       /* const palmBase = landmarks [0];
         const indexBase = landmarks[9]; // Base del dedo índice
 
         const palmCenter = {
@@ -85,7 +85,23 @@
         const depthFactor = Math.max(0.1, 1 - palmCenter.z); // Scale based on depth
 
         handModel.setAttribute('scale', `${depthFactor} ${depthFactor} ${depthFactor}`);
-        handModel.setAttribute('position', `${x} ${y} ${z}`);
+        handModel.setAttribute('position', `${x} ${y} ${z}`);*/
+        const palmBase = landmarks[0]; // Muñeca
+const indexBase = landmarks[9]; // Base del dedo índice
+
+const palmCenter = {
+  x: (palmBase.x + indexBase.x) / 2,
+  y: (palmBase.y + indexBase.y) / 2,
+  z: (palmBase.z + indexBase.z) / 2
+};
+
+const x = (palmCenter.x - 0.5) * 3;
+const y = (0.5 - palmCenter.y) * 2;
+const z = -1 * (palmCenter.z + 0.5);
+
+// Aplicar la posición al objeto 3D
+handModel.setAttribute('position', `${x} ${y} ${z}`);
+
       } else {
         // Hide the model if no hand is detected
         const handModel = document.getElementById('hand-model');
