@@ -11,6 +11,16 @@
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
   <script>
+      if (window.DeviceOrientationEvent) {
+  window.addEventListener("deviceorientation", (event) => {
+    const alpha = event.alpha || 0; // Rotación en el eje Z
+    const beta = event.beta || 0; // Inclinación adelante/atrás (X)
+    const gamma = event.gamma || 0; // Inclinación izquierda/derecha (Y)
+
+    const camera = document.querySelector('a-camera');
+    camera.setAttribute('rotation', `${beta} ${alpha} ${-gamma}`);
+  });
+  }
     window.drawConnectors = window.drawConnectors || drawingUtils.drawConnectors;
     window.drawLandmarks = window.drawLandmarks || drawingUtils.drawLandmarks;
     window.HAND_CONNECTIONS = window.HAND_CONNECTIONS || hands.HAND_CONNECTIONS;
@@ -49,16 +59,7 @@
     const canvasElement = document.getElementsByClassName('output_canvas')[0];
     const canvasCtx = canvasElement.getContext('2d');
     
-    if (window.DeviceOrientationEvent) {
-  window.addEventListener("deviceorientation", (event) => {
-    const alpha = event.alpha || 0; // Rotación en el eje Z
-    const beta = event.beta || 0; // Inclinación adelante/atrás (X)
-    const gamma = event.gamma || 0; // Inclinación izquierda/derecha (Y)
 
-    const camera = document.querySelector('a-camera');
-    camera.setAttribute('rotation', `${beta} ${alpha} ${-gamma}`);
-  });
-}
 
     function onResults(results) {
       canvasCtx.save();
