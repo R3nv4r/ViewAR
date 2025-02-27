@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-  
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
   <link rel="stylesheet" href="../css/camera.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -11,60 +11,70 @@
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
   <script>
-      if (window.DeviceOrientationEvent) {
-  window.addEventListener("deviceorientation", (event) => {
-    const alpha = event.alpha || 0; // Rotación en el eje Z
-    const beta = event.beta || 0; // Inclinación adelante/atrás (X)
-    const gamma = event.gamma || 0; // Inclinación izquierda/derecha (Y)
-
-    const camera = document.querySelector('a-camera');
-    camera.setAttribute('rotation', `${beta} ${alpha} ${-gamma}`);
-  });
-  }
+    if (window.DeviceOrientationEvent) {
+      window.addEventListener("deviceorientation", (event) => {
+        const alpha = event.alpha || 0; // Rotación en el eje Z
+        const beta = event.beta || 0; // Inclinación adelante/atrás (X)
+        const gamma = event.gamma || 0; // Inclinación izquierda/derecha (Y)
+        const camera = document.querySelector('a-camera');
+        camera.setAttribute('rotation', `${beta} ${alpha} ${-gamma}`);
+      });
+    }
     window.drawConnectors = window.drawConnectors || drawingUtils.drawConnectors;
     window.drawLandmarks = window.drawLandmarks || drawingUtils.drawLandmarks;
     window.HAND_CONNECTIONS = window.HAND_CONNECTIONS || hands.HAND_CONNECTIONS;
   </script>
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
-  
+  <style>
+    
+    #instructions {
+      position: absolute;
+      color: white;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.5);
+      padding: 10px;
+      border-radius: 5px;
+    }
+  </style>
 </head>
-
-<div id="instructions" style="position: absolute; color: white; top: 10px;">
-  Abre la palma para mostrar el objeto 3D.
-</div>
-
 <body>
   <div class="container">
     <video class="input_video" autoplay playsinline muted></video>
-    <canvas class="output_canvas" width="1000%" height="1000%"></canvas>
+    <canvas class="output_canvas" width="640" height="480"></canvas>
   </div>
 
   <a-scene>
     <a-assets>
       <a-asset-item id="objeto3d" src="https://r3nv4r.github.io/ViewAR/assets/Mascara.glb"></a-asset-item>
     </a-assets>
+    <a-light type="ambient" color="#ffffff" intensity="0.5"></a-light>
+    <a-light type="directional" position="0 1 1" intensity="0.8"></a-light>
     <a-camera position="0 1.6 3"></a-camera>
     <a-entity id="hand-model" visible="false">
-      <a-gltf-model src="#objeto3d" ></a-gltf-model>
+      <a-gltf-model src="#objeto3d"></a-gltf-model>
     </a-entity>
   </a-scene>
 
   <!-- Botón de retorno -->
-  <button id="return-button" onclick="window.location.href='../Index.html'">
+  <button id="return-button" onclick="window.location.href='../Index.html'" aria-label="Volver a la página principal">
     <i class="fas fa-arrow-left"></i>
   </button>
-    <!-- Save button -->
-    <div class="controls">
-      <button id="save-button">Save</button>
-      <a id="download-link" style="display: none">Descargar Imagen</a>
-    </div>
+  <!-- Botón de guardar -->
+  <div class="controls">
+    <button id="save-button" aria-label="Guardar imagen">Save</button>
+    <a id="download-link" style="display: none" aria-label="Descargar imagen">Descargar Imagen</a>
+  </div>
+  <!-- Instrucciones para el usuario -->
+  <div id="instructions">Abre la palma para mostrar el objeto 3D. Cierra el puño para ocultarlo.</div>
 
   <script type="module">
     const videoElement = document.getElementsByClassName('input_video')[0];
     const canvasElement = document.getElementsByClassName('output_canvas')[0];
     const canvasCtx = canvasElement.getContext('2d');
-    
-
+    const instructions = document.getElementById('instructions');
+    let firstDetection = true;
 
     function onResults(results) {
       canvasCtx.save();
@@ -76,85 +86,81 @@
           window.drawLandmarks(canvasCtx, landmarks, {color: '#FF0000', lineWidth: 2});
         }
 
-        // Detect an open palm gesture
+        // Ocultar instrucciones después de la primera detección
+        if (firstDetection) {
+          instructions.style.display = 'none';
+          firstDetection = false;
+        }
+
         const handModel = document.getElementById('hand-model');
         const landmarks = results.multiHandLandmarks[0];
-        const isOpenPalm = landmarks[8].y < landmarks[6].y && // Index finger
-                           landmarks[12].y < landmarks[10].y && // Middle finger
-                           landmarks[16].y < landmarks[14].y && // Ring finger
-                           landmarks[20].y < landmarks[18].y;   // Pinky finger
 
-        // Show the model if the hand is an open palm
-        handModel.setAttribute('visible', isOpenPalm);
+        // Detectar palma abierta
+        const isOpenPalm = landmarks[8].y < landmarks[6].y && // Dedo índice
+                           landmarks[12].y < landmarks[10].y && // Dedo medio
+                           landmarks[16].y < landmarks[14].y && // Dedo anular
+                           landmarks[20].y < landmarks[18].y;   // Dedo meñique
 
-       /* const palmBase = landmarks [0];
-        const indexBase = landmarks[9]; // Base del dedo índice
+        // Detectar puño cerrado
+        const isClosedFist = landmarks[8].y > landmarks[6].y && // Dedo índice
+                             landmarks[12].y > landmarks[10].y; // Dedo medio
 
+        // Mostrar el modelo si es palma abierta, ocultar si es puño cerrado
+        if (isOpenPalm) {
+          handModel.setAttribute('visible', true);
+        } else if (isClosedFist) {
+          handModel.setAttribute('visible', false);
+        }
+
+        // Calcular escala dinámica basada en la distancia entre muñeca y base del índice
+        const distance = Math.sqrt(
+          Math.pow(landmarks[0].x - landmarks[9].x, 2) +
+          Math.pow(landmarks[0].y - landmarks[9].y, 2)
+        );
+        const scale = distance * 2; // Ajusta el factor según necesites
+        handModel.setAttribute('scale', `${scale} ${scale} ${scale}`);
+
+        // Posicionar el modelo en la palma
         const palmCenter = {
-          x: (landmarks[0].x + landmarks[5].x) / 2,  // Average between the wrist and the base of the index finger
-          y: (landmarks[0].y + landmarks[5].y) / 2,
-          z: (landmarks[0].z + landmarks[5].z) / 2
+          x: (landmarks[0].x + landmarks[9].x) / 2,
+          y: (landmarks[0].y + landmarks[9].y) / 2,
+          z: (landmarks[0].z + landmarks[9].z) / 2
         };
-
         const x = (palmCenter.x - 0.5) * 3;
         const y = (0.5 - palmCenter.y) * 2;
         const z = -1 * (palmCenter.z + 0.5);
-        const depthFactor = Math.max(0.1, 1 - palmCenter.z); // Scale based on depth
-
-        handModel.setAttribute('scale', `${depthFactor} ${depthFactor} ${depthFactor}`);
-        handModel.setAttribute('position', `${x} ${y} ${z}`);*/
-        const palmBase = landmarks[0]; // Muñeca
-const indexBase = landmarks[9]; // Base del dedo índice
-
-const palmCenter = {
-  x: (palmBase.x + indexBase.x) / 2,
-  y: (palmBase.y + indexBase.y) / 2,
-  z: (palmBase.z + indexBase.z) / 2
-};
-
-const x = (palmCenter.x - 0.5) * 3;
-const y = (0.5 - palmCenter.y) * 2;
-const z = -1 * (palmCenter.z + 0.5);
-const distance = Math.sqrt(
-  Math.pow(landmarks[0].x - landmarks[9].x, 2) +
-  Math.pow(landmarks[0].y - landmarks[9].y, 2)
-);
-const scale = distance * 2; // Ajusta el factor según necesites
-handModel.setAttribute('scale', `${scale} ${scale} ${scale}`);
-
-const isClosedFist = landmarks[8].y > landmarks[6].y && // Dedo índice
-                     landmarks[12].y > landmarks[10].y; // Dedo medio
-handModel.setAttribute('visible', !isClosedFist);
-
-// Aplicar la posición al objeto 3D
-handModel.setAttribute('position', `${x} ${y} ${z}`);
-
+        handModel.setAttribute('position', `${x} ${y} ${z}`);
       } else {
-        // Hide the model if no hand is detected
+        // Ocultar el modelo si no se detecta mano
         const handModel = document.getElementById('hand-model');
         handModel.setAttribute('visible', false);
       }
       canvasCtx.restore();
     }
-    
+
     const hands = new Hands({locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`});
     hands.setOptions({
       maxNumHands: 1,
-      modelComplexity: 0,
+      modelComplexity: 0, // Modelo más ligero para mejor rendimiento
       minDetectionConfidence: 0.5,
       minTrackingConfidence: 0.5
     });
     hands.onResults(onResults);
-    
+
     const camera = new Camera(videoElement, {
       onFrame: async () => {
         await hands.send({image: videoElement});
       },
-      width: 640,
+      width: 640, // Resolución reducida para mejor rendimiento
       height: 480,
-      facingMode: 'environment' // Force the rear camera on mobile devices
+      facingMode: 'environment' // Cámara trasera por defecto
     });
-    camera.start();
+
+    // Fallback a cámara frontal si la trasera no está disponible
+    camera.start().catch(() => {
+      camera.setOptions({ facingMode: 'user' });
+      camera.start();
+    });
   </script>
 </body>
 </html>
