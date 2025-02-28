@@ -105,6 +105,14 @@
         const isClosedFist = landmarks[8].y > landmarks[6].y && // Dedo índice
                              landmarks[12].y > landmarks[10].y; // Dedo medio
 
+        //ultima adicion------------------------------------------
+        // Detectar gesto de "agarrar" (dedos parcialmente doblados)
+        const indexFingerDistance = landmarks[8].y - landmarks[6].y; // Distancia punta a base del índice
+        const middleFingerDistance = landmarks[12].y - landmarks[10].y; // Distancia punta a base del medio
+        const isGrabbing = indexFingerDistance > -0.05 && indexFingerDistance < 0.05 && // Rango intermedio para índice
+                           middleFingerDistance > -0.05 && middleFingerDistance < 0.05; // Rango intermedio para medio
+        //ultima adicion------------------------------------------
+
         // Mostrar el modelo si es palma abierta, ocultar si es puño cerrado
         if (isOpenPalm) {
           handModel.setAttribute('visible', true);
@@ -131,12 +139,20 @@
         const z = -1 * (palmCenter.z + 0.5);
         handModel.setAttribute('position', `${x} ${y} ${z}`);
 
-        //ultima adicion------------------------------------------
+        
 
         // Calcular rotación del modelo basada en la orientación de la mano
         const dx = landmarks[9].x - landmarks[0].x; // Diferencia en X entre base del índice y muñeca
         const dy = landmarks[9].y - landmarks[0].y; // Diferencia en Y entre base del índice y muñeca
         const dz = landmarks[9].z - landmarks[0].z; // Diferencia en Z para profundidad
+
+        //ultima adicion------------------------------------------
+        if (isGrabbing) {
+          const dx = landmarks[9].x - landmarks[0].x; // Diferencia en X
+          const dy = landmarks[9].y - landmarks[0].y; // Diferencia en Y
+          const dz = landmarks[9].z - landmarks[0].z; // Diferencia en Z
+        }
+        //ultima adicion------------------------------------------
 
         // Calcular ángulos en grados
         const yaw = -Math.atan2(dy, dx) * (180 / Math.PI); // Rotación en el eje Y (giro horizontal)
@@ -151,7 +167,7 @@
         // Aplicar rotación al modelo (eje Z fijo en 0 por simplicidad, ajusta si necesitas rotación en Z)
         handModel.setAttribute('rotation', `${newPitch} ${newYaw} 0`);
       
-        //ultima adicion------------------------------------------
+        
 
       } else {
         // Ocultar el modelo si no se detecta mano
