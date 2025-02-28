@@ -67,7 +67,8 @@
     <a id="download-link" style="display: none" aria-label="Descargar imagen">Descargar Imagen</a>
   </div>
   <!-- Instrucciones para el usuario -->
-  <div id="instructions">Abre la palma para mostrar el objeto 3D. Cierra el puño para ocultarlo. Rota la mano para girar el objeto.</div>
+  <!-- Cambio: Actualizado para reflejar que la rotación ocurre al entrecerrar la mano -->
+  <div id="instructions">Abre la palma para mostrar el objeto. Entrecierra la mano para rotarlo. Cierra el puño para ocultarlo.</div>
 
   <script type="module">
     const videoElement = document.getElementsByClassName('input_video')[0];
@@ -105,22 +106,20 @@
         const isClosedFist = landmarks[8].y > landmarks[6].y && // Dedo índice
                              landmarks[12].y > landmarks[10].y; // Dedo medio
 
-        //ultima adicion------------------------------------------
-        // Detectar gesto de "agarrar" (dedos parcialmente doblados)
+        // Cambio: Detectar gesto de "agarrar" (dedos parcialmente doblados)
         const indexFingerDistance = landmarks[8].y - landmarks[6].y; // Distancia punta a base del índice
         const middleFingerDistance = landmarks[12].y - landmarks[10].y; // Distancia punta a base del medio
         const isGrabbing = indexFingerDistance > -0.05 && indexFingerDistance < 0.05 && // Rango intermedio para índice
                            middleFingerDistance > -0.05 && middleFingerDistance < 0.05; // Rango intermedio para medio
-        //ultima adicion------------------------------------------
 
-        // Mostrar el modelo si es palma abierta, ocultar si es puño cerrado
+        // Mostrar u ocultar el modelo
         if (isOpenPalm) {
           handModel.setAttribute('visible', true);
         } else if (isClosedFist) {
           handModel.setAttribute('visible', false);
         }
 
-        // Calcular escala dinámica basada en la distancia entre muñeca y base del índice
+        // Calcular escala dinámica
         const distance = Math.sqrt(
           Math.pow(landmarks[0].x - landmarks[9].x, 2) +
           Math.pow(landmarks[0].y - landmarks[9].y, 2)
@@ -139,36 +138,25 @@
         const z = -1 * (palmCenter.z + 0.5);
         handModel.setAttribute('position', `${x} ${y} ${z}`);
 
-        
-
-        // Calcular rotación del modelo basada en la orientación de la mano
-        const dx = landmarks[9].x - landmarks[0].x; // Diferencia en X entre base del índice y muñeca
-        const dy = landmarks[9].y - landmarks[0].y; // Diferencia en Y entre base del índice y muñeca
-        const dz = landmarks[9].z - landmarks[0].z; // Diferencia en Z para profundidad
-
-        //ultima adicion------------------------------------------
+        // Cambio: Aplicar rotación solo si se detecta el gesto de "agarrar"
         if (isGrabbing) {
           const dx = landmarks[9].x - landmarks[0].x; // Diferencia en X
           const dy = landmarks[9].y - landmarks[0].y; // Diferencia en Y
           const dz = landmarks[9].z - landmarks[0].z; // Diferencia en Z
+
+          // Calcular ángulos en grados (invertidos)
+          const yaw = -Math.atan2(dy, dx) * (180 / Math.PI);
+          const pitch = -Math.atan2(dz, Math.sqrt(dx * dx + dy * dy)) * (180 / Math.PI);
+
+          // Suavizar la rotación
+          const currentRotation = handModel.getAttribute('rotation') || { x: 0, y: 0, z: 0 };
+          const smoothingFactor = 0.3;
+          const newYaw = currentRotation.y + (yaw - currentRotation.y) * smoothingFactor;
+          const newPitch = currentRotation.x + (pitch - currentRotation.x) * smoothingFactor;
+
+          // Aplicar rotación al modelo
+          handModel.setAttribute('rotation', `${newPitch} ${newYaw} 0`);
         }
-        //ultima adicion------------------------------------------
-
-        // Calcular ángulos en grados
-        const yaw = -Math.atan2(dy, dx) * (180 / Math.PI); // Rotación en el eje Y (giro horizontal)
-        const pitch = -Math.atan2(dz, Math.sqrt(dx * dx + dy * dy)) * (180 / Math.PI); // Rotación en el eje X (inclinación vertical)
-
-        // Suavizar la rotación para evitar saltos bruscos (usando una interpolación simple)
-        const currentRotation = handModel.getAttribute('rotation') || { x: 0, y: 0, z: 0 };
-        const smoothingFactor = 0.3; // Factor de suavizado (ajusta según necesites)
-        const newYaw = currentRotation.y + (yaw - currentRotation.y) * smoothingFactor;
-        const newPitch = currentRotation.x + (pitch - currentRotation.x) * smoothingFactor;
-
-        // Aplicar rotación al modelo (eje Z fijo en 0 por simplicidad, ajusta si necesitas rotación en Z)
-        handModel.setAttribute('rotation', `${newPitch} ${newYaw} 0`);
-      
-        
-
       } else {
         // Ocultar el modelo si no se detecta mano
         const handModel = document.getElementById('hand-model');
