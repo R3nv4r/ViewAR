@@ -10,6 +10,8 @@
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+
+
   <script>
     if (window.DeviceOrientationEvent) {
       window.addEventListener("deviceorientation", (event) => {
@@ -48,12 +50,16 @@
   <a-scene>
     <a-assets>
       <a-asset-item id="objeto3d" src="https://r3nv4r.github.io/ViewAR/assets/pez.glb"></a-asset-item>
+      
     </a-assets>
     <a-light type="ambient" color="#ffffff" intensity="0.5"></a-light>
     <a-light type="directional" position="0 1 1" intensity="0.8"></a-light>
     <a-camera position="0 1.6 3"></a-camera>
     <a-entity id="hand-model" visible="false">
-      <a-gltf-model src="#objeto3d"></a-gltf-model>
+      
+      <a-gltf-model src="#objeto3d" animation-mixer="clip: *; loop: repeat; timeScale: 1"></a-gltf-model>
+    </a-entity>
+  </a-scene>
     </a-entity>
   </a-scene>
 
