@@ -22,6 +22,12 @@ function onResults(results) {
 
     const handModel = document.getElementById('hand-model');
     const landmarks = results.multiHandLandmarks[0];
+    const handedness = results.multiHandedness[0].label; // 'Left' or 'Right'
+
+    // Display the handedness on the canvas
+    canvasCtx.font = '30px Arial';
+    canvasCtx.fillStyle = 'white';
+    canvasCtx.fillText(handedness === 'Left' ? 'L' : 'R', 10, 50);
 
     const isOpenPalm = landmarks[8].y < landmarks[6].y && 
                        landmarks[12].y < landmarks[10].y && 
