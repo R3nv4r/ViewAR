@@ -2,7 +2,7 @@ body {
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
-    background-color: #813535;
+    background-color: #81353500;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -28,7 +28,7 @@ a-scene, #video, .input_video, .output_canvas {
     overflow: hidden;
     background: #fff;
     border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    
 }
 
 #canvas {
@@ -138,3 +138,13 @@ button:hover, .menu-container button:hover, #save-button:hover {
 .a-enter-vr-button {
     display: none !important;
 }
+#instructions {
+    position: absolute;
+    color: white;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.5);
+    padding: 10px;
+    border-radius: 5px;
+  }

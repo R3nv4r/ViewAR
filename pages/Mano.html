@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-  <link rel="stylesheet" href="../css/camera.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="../css/camera.css">
   <script src="../js/captura.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
-
+  <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
 
   <script>
     if (window.DeviceOrientationEvent) {
@@ -26,25 +26,13 @@
     window.drawLandmarks = window.drawLandmarks || drawingUtils.drawLandmarks;
     window.HAND_CONNECTIONS = window.HAND_CONNECTIONS || hands.HAND_CONNECTIONS;
   </script>
-  <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
-  <style>
-    
-    #instructions {
-      position: absolute;
-      color: white;
-      top: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(0, 0, 0, 0.5);
-      padding: 10px;
-      border-radius: 5px;
-    }
-  </style>
+  
+  
 </head>
 <body>
   <div class="container">
     <video class="input_video" autoplay playsinline muted></video>
-    <canvas class="output_canvas" width="640" height="480"></canvas>
+    <canvas class="output_canvas" width="1000%" height="1000%"></canvas>
   </div>
 
   <a-scene>
@@ -60,8 +48,7 @@
       <a-gltf-model src="#objeto3d" animation-mixer="clip: *; loop: repeat; timeScale: 1"></a-gltf-model>
     </a-entity>
   </a-scene>
-    </a-entity>
-  </a-scene>
+    
 
   <!-- Botón de retorno -->
   <button id="return-button" onclick="window.location.href='../Index.html'" aria-label="Volver a la página principal">
