@@ -27,7 +27,7 @@ function onResults(results) {
     // Display the handedness on the canvas
     canvasCtx.font = '30px Arial';
     canvasCtx.fillStyle = 'white';
-    canvasCtx.fillText(handedness === 'Left' ? 'L' : 'R', 10, 50);
+    canvasCtx.fillText(handedness === 'Left' ? 'R' : 'L', 10, 50);
 
     const isOpenPalm = landmarks[8].y < landmarks[6].y && 
                        landmarks[12].y < landmarks[10].y && 
@@ -48,7 +48,10 @@ function onResults(results) {
       Math.pow(landmarks[0].y - landmarks[9].y, 2)
     );
     const scale = distance * 2;
-    handModel.setAttribute('scale', `${scale} ${scale} ${scale}`);
+
+    // Apply mirror effect based on handedness
+    const scaleX = handedness === 'Right' ? -scale : scale;
+    handModel.setAttribute('scale', `${scaleX} ${scale} ${scale}`);
 
     const palmCenter = {
       x: (landmarks[0].x + landmarks[5].x + landmarks[9].x + landmarks[13].x + landmarks[17].x) / 5,
