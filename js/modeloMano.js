@@ -22,13 +22,14 @@ function onResults(results) {
 
     const handModel = document.getElementById('hand-model');
     const landmarks = results.multiHandLandmarks[0];
-    const handedness = results.multiHandedness[0].label; // 'Left' or 'Right'
+    const handedness = results.multiHandedness[0].label; // 'Left' o 'Right'
 
-    // Display the handedness on the canvas
+    // Mostrar la mano detectada en el canvas (invertida para reflejar la cámara)
     canvasCtx.font = '30px Arial';
     canvasCtx.fillStyle = 'white';
     canvasCtx.fillText(handedness === 'Left' ? 'R' : 'L', 10, 50);
 
+    // Detectar gestos
     const isOpenPalm = landmarks[8].y < landmarks[6].y && 
                        landmarks[12].y < landmarks[10].y && 
                        landmarks[16].y < landmarks[14].y && 
@@ -37,22 +38,32 @@ function onResults(results) {
     const isClosedFist = landmarks[8].y > landmarks[6].y && 
                          landmarks[12].y > landmarks[10].y;
 
+    // Cambio: Añadido gesto de "agarrar" para mantener consistencia con versiones anteriores
+    const indexFingerDistance = landmarks[8].y - landmarks[6].y;
+    const middleFingerDistance = landmarks[12].y - landmarks[10].y;
+    const isGrabbing = indexFingerDistance > -0.05 && indexFingerDistance < 0.05 &&
+                       middleFingerDistance > -0.05 && middleFingerDistance < 0.05;
+
+    // Controlar visibilidad
     if (isOpenPalm) {
       handModel.setAttribute('visible', true);
     } else if (isClosedFist) {
       handModel.setAttribute('visible', false);
     }
 
+    // Calcular escala dinámica
     const distance = Math.sqrt(
       Math.pow(landmarks[0].x - landmarks[9].x, 2) +
       Math.pow(landmarks[0].y - landmarks[9].y, 2)
     );
     const scale = distance * 2;
 
-    // Apply mirror effect based on handedness
+    // Cambio: Aplicar efecto espejo basado en handedness con ajuste simétrico
     const scaleX = handedness === 'Right' ? -scale : scale;
+    
     handModel.setAttribute('scale', `${scaleX} ${scale} ${scale}`);
 
+    // Calcular posición suavizada del centro de la palma
     const palmCenter = {
       x: (landmarks[0].x + landmarks[5].x + landmarks[9].x + landmarks[13].x + landmarks[17].x) / 5,
       y: (landmarks[0].y + landmarks[5].y + landmarks[9].y + landmarks[13].y + landmarks[17].y) / 5,
@@ -69,15 +80,19 @@ function onResults(results) {
     lastPosition.z += (targetZ - lastPosition.z) * smoothingFactor;
     handModel.setAttribute('position', `${lastPosition.x} ${lastPosition.y} ${lastPosition.z}`);
 
-    const dx = landmarks[9].x - landmarks[0].x;
-    const dy = landmarks[9].y - landmarks[0].y;
-    const dz = landmarks[9].z - landmarks[0].z;
-    const yaw = -Math.atan2(dy, dx) * (180 / Math.PI);
-    const pitch = -Math.atan2(dz, Math.sqrt(dx * dx + dy * dy)) * (180 / Math.PI);
-    const currentRotation = handModel.getAttribute('rotation') || { x: 0, y: 0, z: 0 };
-    const newYaw = currentRotation.y + (yaw - currentRotation.y) * smoothingFactor;
-    const newPitch = currentRotation.x + (pitch - currentRotation.x) * smoothingFactor;
-    handModel.setAttribute('rotation', `${newPitch} ${newYaw} 0`);
+    // Cambio: Rotación condicionada al gesto de "agarrar" para mantener consistencia
+    if (isGrabbing) {
+      const dx = landmarks[9].x - landmarks[0].x;
+      const dy = landmarks[9].y - landmarks[0].y;
+      const dz = landmarks[9].z - landmarks[0].z;
+      //const yaw = -Math.atan2(dy, dx) * (180 / Math.PI);
+      const yaw = handedness === 'Right' ? Math.atan2(dy, dx) * (180 / Math.PI) : -Math.atan2(dy, dx) * (180 / Math.PI);
+      const pitch = -Math.atan2(dz, Math.sqrt(dx * dx + dy * dy)) * (180 / Math.PI);
+      const currentRotation = handModel.getAttribute('rotation') || { x: 0, y: 0, z: 0 };
+      const newYaw = currentRotation.y + (yaw - currentRotation.y) * smoothingFactor;
+      const newPitch = currentRotation.x + (pitch - currentRotation.x) * smoothingFactor;
+      handModel.setAttribute('rotation', `${newPitch} ${newYaw} 0`);
+    }
   } else {
     const handModel = document.getElementById('hand-model');
     handModel.setAttribute('visible', false);
