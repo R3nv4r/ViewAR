@@ -63,17 +63,24 @@ body {
     font-size: 14px;
 }
 
-
-.action-btn {
-    background: blueviolet;
-    border: none;
-    color: #fff;
-    font-size: 24px;
-    margin: 10px 0;
+/* Botón de guardado */
+#save-button {
+    width: 30%; /* Adjust width as needed */
+    max-width: 300px; /* Optional: set a max width */
+    margin-bottom: 10px; /* Adjust margin for vertical alignment */
+    
+    padding: 30px 15px;
+    background: #798ea5;
+    color: white;
+    border-radius: 10px;
     cursor: pointer;
-    pointer-events: auto;
+    font-size: 16px;
+    z-index: 10; /* Ensure save button is above the AR scene */
 }
 
+#save-button:hover {
+    background: #0056b3;
+}
 /* Media Query para pantallas más grandes */
 @media (min-width: 768px) {
     .video-container {
