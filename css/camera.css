@@ -5,7 +5,7 @@
     box-sizing: border-box;
 }
 
-/* Estilo del cuerpo para ocupar toda la pantalla */
+
 body {
     height: 100vh;
     width: 100vw;
@@ -14,14 +14,15 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+
 }
 
 /* Contenedor principal del video */
 .video-container {
     position: relative;
     width: 100%;
-    max-width: 480px; /* Ancho máximo típico para móviles */
-    height: 100vh; /* Ocupa toda la altura de la pantalla */
+    max-width: 480px; 
+    height: 100vh; 
     overflow: hidden;
 }
 
@@ -65,17 +66,16 @@ body {
 
 /* Botón de guardado */
 #save-button {
-    width: 30%; /* Adjust width as needed */
-    max-width: 300px; /* Optional: set a max width */
-    margin-bottom: 10px; /* Adjust margin for vertical alignment */
-    
+    width: 30%; 
+    max-width: 300px; 
+    margin-bottom: 10px; 
     padding: 30px 15px;
     background: #798ea5;
     color: white;
     border-radius: 10px;
     cursor: pointer;
     font-size: 16px;
-    z-index: 10; /* Ensure save button is above the AR scene */
+    z-index: 10; 
 }
 
 #save-button:hover {

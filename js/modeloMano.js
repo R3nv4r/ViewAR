@@ -108,3 +108,16 @@ camera.start().catch(() => {
   camera.setOptions({ facingMode: 'user' });
   camera.start();
 });
+
+if (window.DeviceOrientationEvent) {
+  window.addEventListener("deviceorientation", (event) => {
+    const alpha = event.alpha || 0; // Rotación en el eje Z
+    const beta = event.beta || 0; // Inclinación adelante/atrás (X)
+    const gamma = event.gamma || 0; // Inclinación izquierda/derecha (Y)
+    const camera = document.querySelector('a-camera');
+    camera.setAttribute('rotation', `${beta} ${alpha} ${-gamma}`);
+  });
+}
+window.drawConnectors = window.drawConnectors || drawingUtils.drawConnectors;
+window.drawLandmarks = window.drawLandmarks || drawingUtils.drawLandmarks;
+window.HAND_CONNECTIONS = window.HAND_CONNECTIONS || hands.HAND_CONNECTIONS;
