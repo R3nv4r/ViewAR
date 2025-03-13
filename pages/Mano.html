@@ -1,55 +1,61 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <link rel="stylesheet" href="../css/camera.css">
-  <script src="../js/captura.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
-  <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
-
+  <head>
   
-</head>
-<body>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+    <script src="../js/captura.js"></script>
 
-  <div class="video-container">
-    <video class="input_video" autoplay playsinline muted></video>
-    <canvas class="output_canvas" width="1000%" height="1000%"></canvas>
-    <a-scene>
-      <a-assets>
-        <a-asset-item id="objeto3d" src="https://r3nv4r.github.io/ViewAR/assets/pez.glb"></a-asset-item>
+    <title>Shorts Clone</title>
+    <link rel="stylesheet" href="../css/camera.css">
+  </head>
+
+  <style>.a-enter-vr-button {
+    display: none !important;
+  }</style>
+
+  <body>
+    <div class="video-container">
+      <video class="input_video" autoplay playsinline muted></video>
+      <canvas class="output_canvas" width="1000%" height="1000%"></canvas>
+    
+      <a-scene>
+        <a-assets>
+          <a-asset-item id="objeto3d" src="https://r3nv4r.github.io/ViewAR/assets/pez.glb"></a-asset-item>
+        </a-assets>
+
+        <a-light type="ambient" color="#ffffff" intensity="0.5"></a-light>
+        <a-light type="directional" position="0 1 1" intensity="0.8"></a-light>
+        <a-camera position="0 1.6 3"></a-camera>
+        <a-entity id="hand-model" visible="false">
+          <a-gltf-model src="#objeto3d" animation-mixer="clip: *; loop: repeat" ></a-gltf-model>
       
-      </a-assets>
-    <a-light type="ambient" color="#ffffff" intensity="0.5"></a-light>
-    <a-light type="directional" position="0 1 1" intensity="0.8"></a-light>
-    <a-camera position="0 1.6 3"></a-camera>
-    <a-entity id="hand-model" visible="false">
-      <a-gltf-model src="#objeto3d" animation-mixer="clip: *; loop: repeat" ></a-gltf-model>
-      
-    </a-entity>
-  </a-scene>
+        </a-entity>
+      </a-scene>
 
   
-  <div class="controls">
-    <button id="save-button" aria-label="Guardar imagen">Save</button>
-    <a id="download-link" style="display: none" aria-label="Descargar imagen">Descargar Imagen</a>
-  </div>
+      <div class="controls">
+        <button id="save-button" aria-label="Guardar imagen">Save</button>
+        <a id="download-link" style="display: none" aria-label="Descargar imagen">Descargar Imagen</a>
+      </div>
+
+      <div class="video-overlay">
+        <div class="video-info">
+          <h2>Casa del agua</h2>
+          <p>Descripción del video</p>
+          <button class="return-button" onclick="window.location.href='../Index.html'" aria-label="Volver a la página principal">atras</button>
+        </div>
+      </div>
   
-  <div class="video-overlay">
-    <div class="video-info">
-      <h2>Casa del agua</h2>
-      <p>Descripción del video</p>
-      <button class="return-button" onclick="window.location.href='../Index.html'" aria-label="Volver a la página principal">atras</button>
+      <div id="instructions">Abre la palma para mostrar el objeto 3D. Cierra el puño para ocultarlo. Rota la mano para girar el objeto.</div>
+        <script src="../js/modeloMano.js"></script>
     </div>
-  </div>
-  
-  <div id="instructions">Abre la palma para mostrar el objeto 3D. Cierra el puño para ocultarlo. Rota la mano para girar el objeto.</div>
-  <script src="../js/modeloMano.js"></script>
-</div>
 
-</body>
+  </body>
 </html>
