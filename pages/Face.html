@@ -20,9 +20,9 @@
 
 <body>
     <div class="video-container">
-              <a-scene mindar-face embedded color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
+      <a-scene mindar-face embedded color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
         <a-assets>
-          <!-- Cargar los modelos 3D -->
+        <!-- Cargar los modelos 3D -->
           <a-asset-item id="Mascara" src="https://r3nv4r.github.io/ViewAR/assets/Mascara.glb"></a-asset-item>
           
         </a-assets>
@@ -33,21 +33,20 @@
         <a-entity mindar-face-target="anchorIndex: 1">
           <a-gltf-model rotation="0 180 0" position="0 0 0" scale="0.4 0.4 0.4" src="#Mascara"></a-gltf-model>
         </a-entity>
-       
       </a-scene>
-            
-        
-        <div class="video-overlay">
-            <div class="video-info">
-                <h2>Casa del agua</h2>
-                <p>Descripción del video</p>
-                <button class="return-button" onclick="window.location.href='../Index.html'" aria-label="Volver a la página principal">atras</button>
-            </div>
-            <div class="video-actions">
-                <button id="save-button" aria-label="Guardar imagen">Save</button>
-                <a id="download-link" style="display: none" aria-label="Descargar imagen">Guardar Imagen</a>
-            </div>
+      
+      <div class="controls">
+        <button id="save-button" aria-label="Guardar imagen">Save</button>
+        <a id="download-link" style="display: none" aria-label="Descargar imagen">Descargar Imagen</a>
+      </div>  
+
+      <div class="video-overlay">
+        <div class="video-info">
+          <h2>Casa del agua</h2>
+          <p>Descripción del video</p>
+          <button class="return-button" onclick="window.location.href='../Index.html'" aria-label="Volver a la página principal">atras</button>
         </div>
+      </div>
     </div>
 </body>
 </html>

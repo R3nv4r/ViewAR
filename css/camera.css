@@ -66,21 +66,32 @@ body {
 
 /* Botón de guardado */
 #save-button {
-    width: 30%; 
-    max-width: 300px; 
-    margin-bottom: 10px; 
+    width: 30%;
+    max-width: 300px;
+    margin-bottom: 10px;
     padding: 30px 15px;
     background: #798ea5;
     color: white;
     border-radius: 10px;
     cursor: pointer;
     font-size: 16px;
-    z-index: 10; 
+    z-index: 10;
 }
 
 #save-button:hover {
     background: #0056b3;
 }
+.controls {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+    flex-direction: row;
+    position: absolute;
+    bottom: 20px;
+    z-index: 10; /* Ensure controls are above the AR scene */
+}
+
 /* Media Query para pantallas más grandes */
 @media (min-width: 768px) {
     .video-container {
