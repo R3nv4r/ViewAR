@@ -19,11 +19,11 @@
   <div class="video-container">
     <video class="input_video" autoplay playsinline muted></video>
     <canvas class="output_canvas" width="1000%" height="1000%"></canvas>
-  <a-scene>
-    <a-assets>
-      <a-asset-item id="objeto3d" src="https://r3nv4r.github.io/ViewAR/assets/pez.glb"></a-asset-item>
+    <a-scene>
+      <a-assets>
+        <a-asset-item id="objeto3d" src="https://r3nv4r.github.io/ViewAR/assets/pez.glb"></a-asset-item>
       
-    </a-assets>
+      </a-assets>
     <a-light type="ambient" color="#ffffff" intensity="0.5"></a-light>
     <a-light type="directional" position="0 1 1" intensity="0.8"></a-light>
     <a-camera position="0 1.6 3"></a-camera>
@@ -32,10 +32,12 @@
       
     </a-entity>
   </a-scene>
-    
-
 
   
+  <div class="controls">
+    <button id="save-button" aria-label="Guardar imagen">Save</button>
+    <a id="download-link" style="display: none" aria-label="Descargar imagen">Descargar Imagen</a>
+  </div>
   
   <div class="video-overlay">
     <div class="video-info">
@@ -43,11 +45,6 @@
       <p>Descripción del video</p>
       <button class="return-button" onclick="window.location.href='../Index.html'" aria-label="Volver a la página principal">atras</button>
     </div>
-  </div>
-  
-  <div class="controls">
-    <button id="save-button" aria-label="Guardar imagen">Save</button>
-    <a id="download-link" style="display: none" aria-label="Descargar imagen">Descargar Imagen</a>
   </div>
   
   <div id="instructions">Abre la palma para mostrar el objeto 3D. Cierra el puño para ocultarlo. Rota la mano para girar el objeto.</div>
