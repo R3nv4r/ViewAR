@@ -15,11 +15,10 @@
   
 </head>
 <body>
-  <div class="container">
+
+  <div class="video-container">
     <video class="input_video" autoplay playsinline muted></video>
     <canvas class="output_canvas" width="1000%" height="1000%"></canvas>
-  </div>
-
   <a-scene>
     <a-assets>
       <a-asset-item id="objeto3d" src="https://r3nv4r.github.io/ViewAR/assets/pez.glb"></a-asset-item>
@@ -35,18 +34,25 @@
   </a-scene>
     
 
-  <!-- Botón de retorno -->
-  <button id="return-button" onclick="window.location.href='../Index.html'" aria-label="Volver a la página principal">
-    <i class="fas fa-arrow-left"></i>
-  </button>
-  <!-- Botón de guardar -->
+
+  
+  
+  <div class="video-overlay">
+    <div class="video-info">
+      <h2>Casa del agua</h2>
+      <p>Descripción del video</p>
+      <button class="return-button" onclick="window.location.href='../Index.html'" aria-label="Volver a la página principal">atras</button>
+    </div>
+  </div>
+  
   <div class="controls">
     <button id="save-button" aria-label="Guardar imagen">Save</button>
     <a id="download-link" style="display: none" aria-label="Descargar imagen">Descargar Imagen</a>
   </div>
-  <!-- Instrucciones para el usuario -->
+  
   <div id="instructions">Abre la palma para mostrar el objeto 3D. Cierra el puño para ocultarlo. Rota la mano para girar el objeto.</div>
+  <script src="../js/modeloMano.js"></script>
+</div>
 
-<script src="../js/modeloMano.js"></script>
 </body>
 </html>
