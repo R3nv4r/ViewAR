@@ -5,6 +5,26 @@ const instructions = document.getElementById('instructions');
 let firstDetection = true;
 let lastPosition = { x: 0, y: 0, z: 0 };
 
+// Ajustar dimensiones del canvas al iniciar
+function adjustCanvasSize() {
+  const scaleFactor = 3; // Factor para aumentar resolución (ajusta según calidad deseada)
+  const width = window.innerWidth * scaleFactor;
+  const height = window.innerHeight * scaleFactor;
+
+  // Dimensiones internas del canvas (resolución alta para calidad)
+  canvasElement.width = width;
+  canvasElement.height = height;
+
+  // Dimensiones visuales (para que encaje en la pantalla)
+  canvasElement.style.width = `${window.innerWidth}px`;
+  canvasElement.style.height = `${window.innerHeight}px`;
+}
+
+// Ejecutar al cargar y al redimensionar
+adjustCanvasSize();
+window.addEventListener('resize', adjustCanvasSize);
+
+
 function onResults(results) {
   canvasCtx.save();
   canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
