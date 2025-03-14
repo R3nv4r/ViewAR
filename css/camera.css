@@ -37,26 +37,23 @@ body {
     object-fit: cover; /* Asegura que el video llene el contenedor sin deformarse */
 }
 
-/* Capa de superposición para información y controles */
+/* Overlay y texto */
 .video-overlay {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    z-index: 10;
+    color: white;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 10px;
+  }
+  
+  .video-info {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    color: #fff;
-    pointer-events: none; /* Permite que los clics pasen al video si es necesario */
-}
-
-/* Información del video (usuario y descripción) */
-.video-info {
-    padding: 20px;
-    
-    pointer-events: auto;
-}
+    align-items: flex-start;
+  }
 
 .video-info h2 {
     font-size: 18px;
@@ -103,14 +100,21 @@ body {
         box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
     }
 }
-
-/*contenido de realidad aumentada*/
-a-scene #video, .output_canvas{
+.output_canvas {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
+  }
+/*contenido de realidad aumentada*/
+a-scene #video{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1; /* Asegura que esté detrás del overlay */
 }
 
 /* Contenedor de la escena AR */
