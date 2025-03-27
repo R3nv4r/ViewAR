@@ -62,7 +62,7 @@ function onResults(results) {
     if (isOpenPalm) {
       handModel.setAttribute('visible', true);
     } else if (isClosedFist) {
-      handModel.setAttribute('visible', false);
+      handModel.setAttribute('visible', true);
     }
 
     // Calcular escala dinámica

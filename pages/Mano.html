@@ -6,10 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v7.0.0/dist/aframe-extras.min.js"></script>
+    
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+
     <script src="../js/captura.js"></script>
 
     <title>Shorts Clone</title>
@@ -34,8 +37,7 @@
         <a-light type="directional" position="0 1 1" intensity="0.8"></a-light>
         <a-camera position="0 1.6 3"></a-camera>
         <a-entity id="hand-model" visible="false">
-          <a-gltf-model src="#objeto3d" animation-mixer="clip: *; loop: repeat" ></a-gltf-model>
-      
+          <a-gltf-model src="#objeto3d" animation-mixer="clip: *; loop: repeat; timeScale: 1"></a-gltf-model>
         </a-entity>
       </a-scene>
 
