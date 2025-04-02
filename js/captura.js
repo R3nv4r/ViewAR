@@ -31,8 +31,8 @@ document.addEventListener('DOMContentLoaded', function() {
     tempCanvas.height = canvas.height;
     const tempContext = tempCanvas.getContext('2d');
     
-    //tempContext.translate(tempCanvas.width, 0);
-    //tempContext.scale(-1, 1);
+    tempContext.translate(tempCanvas.width, 0);
+    tempContext.scale(1, 1);
 
     // Draw the video feed onto the temporary canvas (background)
     tempContext.drawImage(video, 0, 0, tempCanvas.width, tempCanvas.height);
