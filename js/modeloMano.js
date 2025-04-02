@@ -29,37 +29,6 @@ function adjustCanvasSize() {
 adjustCanvasSize();
 window.addEventListener('resize', adjustCanvasSize);
 
-// Función para detectar gestos más robusta
-function detectHandGesture(landmarks) {
-  // Comprobar si los dedos están extendidos (1 = extendido, 0 = doblado)
-  const fingerExtended = [
-    // Pulgar: comparar con punto CMC del pulgar
-    landmarks[4].x > landmarks[3].x, 
-    // Índice
-    landmarks[8].y < landmarks[6].y,
-    // Medio
-    landmarks[12].y < landmarks[10].y,
-    // Anular
-    landmarks[16].y < landmarks[14].y,
-    // Meñique
-    landmarks[20].y < landmarks[18].y
-  ];
-  
-  // Contar dedos extendidos
-  const extendedCount = fingerExtended.filter(Boolean).length;
-  
-  // Definir gestos
-  const gestures = {
-    fist: extendedCount <= 1,
-    openPalm: extendedCount >= 4,
-    pointingIndex: fingerExtended[1] && !fingerExtended[2] && !fingerExtended[3] && !fingerExtended[4],
-    victory: fingerExtended[1] && fingerExtended[2] && !fingerExtended[3] && !fingerExtended[4],
-    thumbsUp: fingerExtended[0] && !fingerExtended[1] && !fingerExtended[2] && !fingerExtended[3] && !fingerExtended[4],
-  };
-  
-  return gestures;
-}
-
 // Función de suavizado más avanzada
 function smoothValue(current, target, factor = 0.2, deltaTime = 16) {
   // Ajuste dinámico basado en tiempo
@@ -95,28 +64,9 @@ function onResults(results) {
       firstDetection = false;
     }
 
-    // Detectar gestos
-    const gestures = detectHandGesture(landmarks);
-    
-    // Controlar visibilidad del modelo
-    if (gestures.openPalm) {
-      handVisibility = true;
-      handVisibilityTimestamp = now;
-    } else if (gestures.fist) {
-      handVisibility = false;
-    }
-    
-    // Mantener visible durante 500ms después del último gesto detectado
-    const visibilityTimeout = 500; // milisegundos
-    handModel.setAttribute('visible', handVisibility || (now - handVisibilityTimestamp < visibilityTimeout));
-
-    // Mostrar el gesto detectado en pantalla para depuración
-    canvasCtx.font = '30px Arial';
-    canvasCtx.fillStyle = 'white';
-    canvasCtx.fillText(
-      Object.keys(gestures).find(key => gestures[key]) || 'Unknown',
-      10, 50
-    );
+    // Hacer el modelo visible cuando se detecta la mano
+    handModel.setAttribute('visible', true);
+    handVisibilityTimestamp = now;
 
     // Calcular escala dinámica basada en el tamaño de la mano
     const palmSize = Math.sqrt(
@@ -164,19 +114,6 @@ function onResults(results) {
     
     handModel3D.setAttribute('rotation', `${lastRotation.x} ${lastRotation.y} ${lastRotation.z}`);
     handModel.setAttribute('scale', `${scale} ${scale} ${scale}`);
-    
-    // Interacción especial basada en gestos
-    if (gestures.pointingIndex) {
-      // Por ejemplo, rotar más rápido o cambiar color
-      handModel3D.setAttribute('animation', 'property: rotation; to: 0 360 0; loop: true; dur: 2000');
-    } else if (gestures.victory) {
-      // Hacer algo con el gesto de victoria
-      handModel3D.removeAttribute('animation');
-      handModel3D.setAttribute('scale', '1.2 1.2 1.2'); // Agrandar temporalmente
-    } else {
-      handModel3D.removeAttribute('animation');
-      handModel3D.setAttribute('scale', '1 1 1');
-    }
     
   } else {
     // Mano no detectada
