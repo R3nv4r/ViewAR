@@ -4,10 +4,15 @@ const canvasCtx = canvasElement.getContext('2d');
 const instructions = document.getElementById('instructions');
 let firstDetection = true;
 let lastPosition = { x: 0, y: 0, z: 0 };
+let lastRotation = { x: 0, y: 0, z: 0 };
+let handVisibility = false;
+let handVisibilityTimestamp = 0;
 
 // Ajustar dimensiones del canvas al iniciar
 function adjustCanvasSize() {
-  const scaleFactor = 3; // Factor para aumentar resolución (ajusta según calidad deseada)
+  // Detectar la densidad de píxeles del dispositivo para mejor calidad
+  const pixelRatio = window.devicePixelRatio || 1;
+  const scaleFactor = Math.min(3, pixelRatio * 1.5); // Limitar para rendimiento
   const width = window.innerWidth * scaleFactor;
   const height = window.innerHeight * scaleFactor;
 
@@ -24,120 +29,225 @@ function adjustCanvasSize() {
 adjustCanvasSize();
 window.addEventListener('resize', adjustCanvasSize);
 
+// Función para detectar gestos más robusta
+function detectHandGesture(landmarks) {
+  // Comprobar si los dedos están extendidos (1 = extendido, 0 = doblado)
+  const fingerExtended = [
+    // Pulgar: comparar con punto CMC del pulgar
+    landmarks[4].x > landmarks[3].x, 
+    // Índice
+    landmarks[8].y < landmarks[6].y,
+    // Medio
+    landmarks[12].y < landmarks[10].y,
+    // Anular
+    landmarks[16].y < landmarks[14].y,
+    // Meñique
+    landmarks[20].y < landmarks[18].y
+  ];
+  
+  // Contar dedos extendidos
+  const extendedCount = fingerExtended.filter(Boolean).length;
+  
+  // Definir gestos
+  const gestures = {
+    fist: extendedCount <= 1,
+    openPalm: extendedCount >= 4,
+    pointingIndex: fingerExtended[1] && !fingerExtended[2] && !fingerExtended[3] && !fingerExtended[4],
+    victory: fingerExtended[1] && fingerExtended[2] && !fingerExtended[3] && !fingerExtended[4],
+    thumbsUp: fingerExtended[0] && !fingerExtended[1] && !fingerExtended[2] && !fingerExtended[3] && !fingerExtended[4],
+  };
+  
+  return gestures;
+}
+
+// Función de suavizado más avanzada
+function smoothValue(current, target, factor = 0.2, deltaTime = 16) {
+  // Ajuste dinámico basado en tiempo
+  const adjustedFactor = 1 - Math.pow(1 - factor, deltaTime / 16);
+  return current + (target - current) * adjustedFactor;
+}
+
+let lastFrameTime = 0;
 
 function onResults(results) {
+  const now = performance.now();
+  const deltaTime = now - lastFrameTime;
+  lastFrameTime = now;
+
+  // Dibujar imagen de video
   canvasCtx.save();
   canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
   canvasCtx.drawImage(videoElement, 0, 0, canvasElement.width, canvasElement.height);
+  
+  const handModel = document.getElementById('hand-model');
+  
   if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
-    for (const landmarks of results.multiHandLandmarks) {
-      window.drawConnectors(canvasCtx, landmarks, window.HAND_CONNECTIONS, {color: '#00FF00', lineWidth: 5});
-      window.drawLandmarks(canvasCtx, landmarks, {color: '#FF0000', lineWidth: 2});
-    }
+    const landmarks = results.multiHandLandmarks[0];
+    const handedness = results.multiHandedness[0].label; // 'Left' o 'Right'
+    
+    // Dibujar puntos de referencia y conexiones
+    window.drawConnectors(canvasCtx, landmarks, window.HAND_CONNECTIONS, {color: '#00FF00', lineWidth: 5});
+    window.drawLandmarks(canvasCtx, landmarks, {color: '#FF0000', lineWidth: 2});
 
+    // Ocultar instrucciones después de primera detección
     if (firstDetection) {
       instructions.style.display = 'none';
       firstDetection = false;
     }
 
-    const handModel = document.getElementById('hand-model');
-    const landmarks = results.multiHandLandmarks[0];
-    const handedness = results.multiHandedness[0].label; // 'Left' o 'Right'
+    // Detectar gestos
+    const gestures = detectHandGesture(landmarks);
+    
+    // Controlar visibilidad del modelo
+    if (gestures.openPalm) {
+      handVisibility = true;
+      handVisibilityTimestamp = now;
+    } else if (gestures.fist) {
+      handVisibility = false;
+    }
+    
+    // Mantener visible durante 500ms después del último gesto detectado
+    const visibilityTimeout = 500; // milisegundos
+    handModel.setAttribute('visible', handVisibility || (now - handVisibilityTimestamp < visibilityTimeout));
 
-    // Mostrar la mano detectada en el canvas (invertida para reflejar la cámara)
+    // Mostrar el gesto detectado en pantalla para depuración
     canvasCtx.font = '30px Arial';
     canvasCtx.fillStyle = 'white';
-    canvasCtx.fillText(handedness === 'Left' ? 'Renvar' : 'L', 10, 50);
-
-    // Detectar gestos para visibilidad
-    const isOpenPalm = landmarks[8].y < landmarks[6].y && 
-                       landmarks[12].y < landmarks[10].y && 
-                       landmarks[16].y < landmarks[14].y && 
-                       landmarks[20].y < landmarks[18].y;
-
-    const isClosedFist = landmarks[8].y > landmarks[6].y && 
-                         landmarks[12].y > landmarks[10].y;
-
-    // Controlar visibilidad
-    if (isOpenPalm) {
-      handModel.setAttribute('visible', true);
-    } else if (isClosedFist) {
-      handModel.setAttribute('visible', true);
-    }
-
-    // Calcular escala dinámica
-    const distance = Math.sqrt(
-      Math.pow(landmarks[0].x - landmarks[9].x, 2) +
-      Math.pow(landmarks[0].y - landmarks[9].y, 2)
+    canvasCtx.fillText(
+      Object.keys(gestures).find(key => gestures[key]) || 'Unknown',
+      10, 50
     );
-    const scale = distance * 2;
 
-    // Cambio: Ajustar el efecto espejo con rotación en lugar de escala negativa
-    const baseYaw = handedness === 'Right' ? 180 : 0; // Rotación base para simetría
-    handModel.querySelector('a-gltf-model').setAttribute('rotation', `0 ${baseYaw} 0`);
-    handModel.setAttribute('scale', `${scale} ${scale} ${scale}`); // Escala normal sin inversión
+    // Calcular escala dinámica basada en el tamaño de la mano
+    const palmSize = Math.sqrt(
+      Math.pow(landmarks[0].x - landmarks[9].x, 2) +
+      Math.pow(landmarks[0].y - landmarks[9].y, 2) +
+      Math.pow(landmarks[0].z - landmarks[9].z, 2)
+    );
+    const scale = palmSize * 2;
 
-    // Cambio: Anclar el modelo al punto de muñeca (landmarks[0])
-    const anchorPoint = landmarks[0]; // muñeca
-    const targetX = (anchorPoint.x - 0.5) * 3; // Mapear X al espacio 3D
-    const targetY = (0.5 - anchorPoint.y) * 2; // Mapear Y al espacio 3D
-    const targetZ = -1 * (anchorPoint.z + 0.5); // Mapear Z al espacio 3D
+    // Posicionamiento del modelo
+    const anchorPoint = landmarks[0]; // muñeca como punto de anclaje
+    const targetX = (anchorPoint.x - 0.5) * 3;
+    const targetY = (0.5 - anchorPoint.y) * 2;
+    const targetZ = -1 * (anchorPoint.z + 0.5);
 
-    const smoothingFactor = 0.3; // Suavizado para movimientos más naturales
-    lastPosition.x += (targetX - lastPosition.x) * smoothingFactor;
-    lastPosition.y += (targetY - lastPosition.y) * smoothingFactor;
-    lastPosition.z += (targetZ - lastPosition.z) * smoothingFactor;
+    // Suavizado dependiente del tiempo
+    lastPosition.x = smoothValue(lastPosition.x, targetX, 0.3, deltaTime);
+    lastPosition.y = smoothValue(lastPosition.y, targetY, 0.3, deltaTime);
+    lastPosition.z = smoothValue(lastPosition.z, targetZ, 0.3, deltaTime);
+    
     handModel.setAttribute('position', `${lastPosition.x} ${lastPosition.y} ${lastPosition.z}`);
 
-    // Cambio: Rotación automática basada en la orientación de la mano
-    const dx = landmarks[9].x - landmarks[0].x; // Base del índice a muñeca
-    const dy = landmarks[9].y - landmarks[0].y;
-    const dz = landmarks[9].z - landmarks[0].z;
-    const yaw = -Math.atan2(dy, dx) * (180 / Math.PI);
+    // Rotación basada en la orientación de la mano
+    const handModel3D = handModel.querySelector('a-gltf-model');
+    const baseYaw = handedness === 'Right' ? 180 : 0; // Rotación base para simetría
+    
+    // Calcular ángulos de orientación de la mano
+    const indexBase = landmarks[5]; // Base del dedo índice
+    const pinkyBase = landmarks[17]; // Base del dedo meñique
+    
+    // Vector de orientación de la palma (de meñique a índice)
+    const dx = indexBase.x - pinkyBase.x;
+    const dy = indexBase.y - pinkyBase.y;
+    const dz = indexBase.z - pinkyBase.z;
+    
+    // Calcular ángulos
+    const yaw = -Math.atan2(dy, dx) * (180 / Math.PI) + baseYaw;
     const pitch = -Math.atan2(dz, Math.sqrt(dx * dx + dy * dy)) * (180 / Math.PI);
-    const currentRotation = handModel.getAttribute('rotation') || { x: 0, y: 0, z: 0 };
-    const newYaw = currentRotation.y + (yaw - currentRotation.y) * smoothingFactor;
-    const newPitch = currentRotation.x + (pitch - currentRotation.x) * smoothingFactor;
-    handModel.setAttribute('rotation', `${newPitch} ${newYaw} 0`);
+    const roll = Math.atan2(landmarks[17].y - landmarks[5].y, landmarks[17].x - landmarks[5].x) * (180 / Math.PI);
+    
+    // Suavizar rotación
+    lastRotation.x = smoothValue(lastRotation.x, pitch, 0.2, deltaTime);
+    lastRotation.y = smoothValue(lastRotation.y, yaw, 0.2, deltaTime);
+    lastRotation.z = smoothValue(lastRotation.z, roll, 0.1, deltaTime);
+    
+    handModel3D.setAttribute('rotation', `${lastRotation.x} ${lastRotation.y} ${lastRotation.z}`);
+    handModel.setAttribute('scale', `${scale} ${scale} ${scale}`);
+    
+    // Interacción especial basada en gestos
+    if (gestures.pointingIndex) {
+      // Por ejemplo, rotar más rápido o cambiar color
+      handModel3D.setAttribute('animation', 'property: rotation; to: 0 360 0; loop: true; dur: 2000');
+    } else if (gestures.victory) {
+      // Hacer algo con el gesto de victoria
+      handModel3D.removeAttribute('animation');
+      handModel3D.setAttribute('scale', '1.2 1.2 1.2'); // Agrandar temporalmente
+    } else {
+      handModel3D.removeAttribute('animation');
+      handModel3D.setAttribute('scale', '1 1 1');
+    }
+    
   } else {
-    const handModel = document.getElementById('hand-model');
+    // Mano no detectada
     handModel.setAttribute('visible', false);
   }
+  
   canvasCtx.restore();
 }
 
 const hands = new Hands({locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`});
 hands.setOptions({
   maxNumHands: 1,
-  modelComplexity: 0,
+  modelComplexity: 1, // Aumentado para mejor precisión
   minDetectionConfidence: 0.5,
   minTrackingConfidence: 0.5
 });
 hands.onResults(onResults);
 
-const camera = new Camera(videoElement, {
+// Iniciar cámara con mejor calidad si es posible
+const cameraOptions = {
   onFrame: async () => {
     await hands.send({image: videoElement});
   },
-  width: 640,
-  height: 480,
+  width: 1280, // Mayor resolución
+  height: 720,
   facingMode: 'environment'
-});
+};
 
-camera.start().catch(() => {
-  camera.setOptions({ facingMode: 'user' });
-  camera.start();
-});
+// Función para iniciar la cámara con manejo de errores
+async function startCamera() {
+  try {
+    await camera.start();
+  } catch (err) {
+    console.log("Error al iniciar cámara trasera:", err);
+    camera.setOptions({ 
+      ...cameraOptions,
+      facingMode: 'user',
+      width: 640, // Menor resolución como fallback
+      height: 480
+    });
+    try {
+      await camera.start();
+    } catch (innerErr) {
+      console.error("Error al iniciar cualquier cámara:", innerErr);
+      instructions.textContent = "No se pudo acceder a la cámara. Por favor, verifica los permisos.";
+    }
+  }
+}
 
+const camera = new Camera(videoElement, cameraOptions);
+startCamera();
+
+// Manejo mejorado de orientación del dispositivo
 if (window.DeviceOrientationEvent) {
+  // Usar un temporizador para limitar las actualizaciones
+  let orientationUpdateTimer = null;
   window.addEventListener("deviceorientation", (event) => {
-    const alpha = event.alpha || 0; // Rotación en el eje Z
-    const beta = event.beta || 0; // Inclinación adelante/atrás (X)
-    const gamma = event.gamma || 0; // Inclinación izquierda/derecha (Y)
-    const camera = document.querySelector('a-camera');
-    camera.setAttribute('rotation', `${beta} ${alpha} ${-gamma}`);
+    if (!orientationUpdateTimer) {
+      orientationUpdateTimer = setTimeout(() => {
+        const alpha = event.alpha || 0; // Rotación en el eje Z
+        const beta = event.beta || 0; // Inclinación adelante/atrás (X)
+        const gamma = event.gamma || 0; // Inclinación izquierda/derecha (Y)
+        const camera = document.querySelector('a-camera');
+        camera.setAttribute('rotation', `${beta} ${alpha} ${-gamma}`);
+        orientationUpdateTimer = null;
+      }, 50); // Actualizar máximo 20 veces por segundo
+    }
   });
 }
+
+// Asegurar que estas variables estén disponibles
 window.drawConnectors = window.drawConnectors || drawingUtils.drawConnectors;
 window.drawLandmarks = window.drawLandmarks || drawingUtils.drawLandmarks;
 window.HAND_CONNECTIONS = window.HAND_CONNECTIONS || hands.HAND_CONNECTIONS;
