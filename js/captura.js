@@ -49,9 +49,14 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
       }
 
+      // Generate a filename using the current date and time
+      const now = new Date();
+      const formattedDate = now.toISOString().replace(/:/g, '-').split('.')[0]; // Format: YYYY-MM-DDTHH-MM-SS
+      const filename = `captura_${formattedDate}.png`;
+
       const url = URL.createObjectURL(blob);
       downloadLink.href = url;
-      downloadLink.download = 'captura.png';
+      downloadLink.download = filename; // Use the generated filename
       downloadLink.click();
     }, 'image/png');
   });
