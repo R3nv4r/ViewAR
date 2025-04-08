@@ -36,12 +36,12 @@ body {
 /* Overlay y texto */
 .video-overlay {
     position: absolute;
-    top: 20px; /* Más espacio desde la parte superior */
+    top: 5px; /* Más espacio desde la parte superior */
     left: 20px; /* Más espacio desde los lados */
     right: 20px; /* Ajuste para pantallas pequeñas */
     z-index: 100; /* Asegura que esté por encima de todo */
     color: white;
-    background: rgba(0, 0, 0, 0.7); /* Fondo más oscuro para mejor visibilidad */
+    background: rgba(0, 0, 0, 0.645); /* Fondo más oscuro para mejor visibilidad */
     padding: 15px; /* Espacio interno */
     border-radius: 5px;
 }
