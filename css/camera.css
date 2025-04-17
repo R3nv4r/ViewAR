@@ -87,9 +87,7 @@ body {
     stroke: #0056b3; /* Color al pasar el ratón (coincide con tu hover original) */
   }
   
-  #save-button:focus {
-    outline: 2px solid #fff; /* Contorno blanco para accesibilidad, acorde con el fondo oscuro */
-  }
+  
 .controls {
     width: 100%;
     display: flex;
@@ -97,7 +95,7 @@ body {
     margin-top: 10px;
     flex-direction: row;
     position: absolute;
-    bottom: 30px;
+    bottom: 50px;
     z-index: 10; /* Ensure controls are above the AR scene */
 }
 
