@@ -67,7 +67,7 @@ body {
     background: none; /* Elimina el fondo azul */
     border: none; /* Sin borde */
     cursor: pointer;
-    margin-bottom:20px;
+    margin-bottom:10px;
     padding:50px; /* Espacio alrededor del SVG */
     display: flex;
     justify-content: center;
@@ -131,7 +131,11 @@ body {
         box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
     }
 }
-
+@media screen and (orientation:portrait) {
+    body {
+      display: block;
+    }
+  }
 /*contenido de realidad aumentada*/
 a-scene #video{
     position: absolute;
