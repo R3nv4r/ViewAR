@@ -67,6 +67,7 @@ body {
     background: none; /* Elimina el fondo azul */
     border: none; /* Sin borde */
     cursor: pointer;
+    margin-bottom:20px;
     padding:50px; /* Espacio alrededor del SVG */
     display: flex;
     justify-content: center;
