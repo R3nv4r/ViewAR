@@ -66,7 +66,6 @@ body {
 #save-button {
     background: none; /* Elimina el fondo azul */
     border: none; /* Sin borde */
-    
     cursor: pointer;
     padding: 5px; /* Espacio alrededor del SVG */
     display: flex;
@@ -82,7 +81,32 @@ body {
     fill: none; /* Ajusta según tu SVG */
     transition: stroke 0.3s; /* Transición suave para el hover */
   }
+
+  #save-button .default-svg, #save-button .active-svg {
+    transition: opacity 0.2s ease; /* Suaviza el cambio */
+    position: absolute; /* Apila los SVGs */
+  }
+
+  #save-button .default-svg {
+    display: block; /* Visible por defecto */
+    opacity: 1;
+  }
   
+  #save-button .active-svg {
+    display: none; /* Oculta por defecto */
+    opacity:0;
+  }
+  
+  #save-button:active .default-svg {
+    display: none; /* Oculta cuando se presiona */
+    opacity: 0;
+  }
+  
+  #save-button:active .active-svg {
+    display: block; /* Muestra cuando se presiona */
+    opacity: 1;
+  }
+
   #save-button:hover svg {
     stroke: #0056b3; /* Color al pasar el ratón (coincide con tu hover original) */
   }
