@@ -1,94 +1,194 @@
 document.addEventListener('DOMContentLoaded', function() {
   const saveButton = document.getElementById('save-button');
   const downloadLink = document.getElementById('download-link');
+  const overlayCanvas = document.getElementById('overlay');
 
+  // Verificar si overlayCanvas existe antes de intentar obtener el contexto
+  if (!overlayCanvas) {
+    console.error('Overlay canvas not found. Please ensure <canvas id="overlay"> exists in the HTML.');
+    return; // Detener la ejecución si el canvas no se encuentra
+  }
+
+  const overlayContext = overlayCanvas.getContext('2d');
+  if (!overlayContext) {
+    console.error('Failed to get 2D context for overlay canvas.');
+    return; // Detener la ejecución si no se puede obtener el contexto
+  }
+
+  // Detectar la escena A-Frame
+  const scene = document.querySelector('a-scene');
+  if (!scene) {
+    console.error('A-Frame scene not found');
+    return;
+  }
+
+  // Obtener el elemento de video que MindAR usa internamente
+  let video;
+  const waitForVideo = setInterval(() => {
+    video = document.querySelector('video');
+    if (video && video.videoWidth > 0 && video.videoHeight > 0) {
+      clearInterval(waitForVideo);
+      initializeOverlay();
+    }
+  }, 100);
+
+  // Ajustar las dimensiones del overlay y dibujar las líneas de guía
+  function initializeOverlay() {
+    try {
+      const videoContainer = document.querySelector('.video-container');
+      if (!videoContainer) {
+        console.error('Video container not found');
+        return;
+      }
+
+      overlayCanvas.width = videoContainer.clientWidth;
+      overlayCanvas.height = videoContainer.clientHeight;
+
+      const videoAspect = video.videoWidth / video.videoHeight;
+      const containerAspect = overlayCanvas.width / overlayCanvas.height;
+      let videoWidth, videoHeight, offsetX, offsetY;
+
+      if (videoAspect > containerAspect) {
+        videoHeight = overlayCanvas.height;
+        videoWidth = videoHeight * videoAspect;
+        offsetX = (overlayCanvas.width - videoWidth) / 2;
+        offsetY = 0;
+      } else {
+        videoWidth = overlayCanvas.width;
+        videoHeight = videoWidth / videoAspect;
+        offsetX = 0;
+        offsetY = (overlayCanvas.height - videoHeight) / 2;
+      }
+
+      const marginYPercent = 0;
+      const marginXPercent = 0.255;
+      const marginX = videoWidth * marginXPercent;
+      const marginY = videoHeight * marginYPercent;
+      const guideX = offsetX + marginX;
+      const guideY = offsetY + marginY;
+      const guideWidth = videoWidth - 2 * marginX;
+      const guideHeight = videoHeight - 2 * marginY;
+
+      overlayCanvas.dataset.guideX = guideX || 0;
+      overlayCanvas.dataset.guideY = guideY || 0;
+      overlayCanvas.dataset.guideWidth = guideWidth || overlayCanvas.width;
+      overlayCanvas.dataset.guideHeight = guideHeight || overlayCanvas.height;
+      overlayCanvas.dataset.offsetX = offsetX || 0;
+      overlayCanvas.dataset.offsetY = offsetY || 0;
+      overlayCanvas.dataset.videoWidth = videoWidth || overlayCanvas.width;
+      overlayCanvas.dataset.videoHeight = videoHeight || overlayCanvas.height;
+
+      overlayContext.strokeStyle = 'white';
+      overlayContext.lineWidth = 2;
+      overlayContext.beginPath();
+      overlayContext.moveTo(guideX, guideY);
+      overlayContext.lineTo(guideX + guideWidth, guideY);
+      overlayContext.moveTo(guideX, guideY + guideHeight);
+      overlayContext.lineTo(guideX + guideWidth, guideY + guideHeight);
+      overlayContext.stroke();
+    } catch (error) {
+      console.error('Error initializing overlay:', error);
+    }
+  }
+
+  // Manejar el evento de captura
   saveButton.addEventListener('click', function() {
-    // Detectar qué tipo de AR estamos usando
-    const scene = document.querySelector('a-scene');
-    if (!scene) {
-      console.error('A-Frame scene not found');
-      return;
-    }
+    try {
+      const isFaceAR = scene.hasAttribute('mindar-face');
+      const isImageAR = scene.hasAttribute('mindar-image');
+      const isHandAR = document.querySelector('.output_canvas') !== null;
 
-    // Crear un canvas temporal para la composición final
-    const tempCanvas = document.createElement('canvas');
-    
-    // Determinar tipo de AR
-    const isFaceAR = scene.hasAttribute('mindar-face');
-    const isImageAR = scene.hasAttribute('mindar-image');
-    const isHandAR = document.querySelector('.output_canvas') !== null;
-    
-    // Configurar el canvas con las dimensiones correctas
-    if (isHandAR) {
-      // Para AR de manos, usa las dimensiones del canvas de MediaPipe
-      const mediaCanvas = document.querySelector('.output_canvas');
-      tempCanvas.width = mediaCanvas.width;
-      tempCanvas.height = mediaCanvas.height;
-    } else {
-      // Para MindAR, usa las dimensiones del renderer de A-Frame
-      const canvas = scene.renderer.domElement;
-      tempCanvas.width = canvas.width;
-      tempCanvas.height = canvas.height;
-    }
-    
-    const tempContext = tempCanvas.getContext('2d');
-    
-    if (isHandAR) {
-      // Para AR de manos (MediaPipe)
-      const mediaCanvas = document.querySelector('.output_canvas');
-      const video = document.querySelector('.input_video');
-      
-      // Asegurar que el modelo 3D se renderice
-      scene.renderer.render(scene.object3D, scene.camera);
-      
-      // Primero dibujamos el video/canvas de MediaPipe que ya tiene detección de manos
-      tempContext.drawImage(mediaCanvas, 0, 0, tempCanvas.width, tempCanvas.height);
-      
-      // Luego superponemos los elementos 3D de A-Frame
-      tempContext.drawImage(scene.renderer.domElement, 0, 0, tempCanvas.width, tempCanvas.height);
-    } else {
-      // Para MindAR (imagen o cara)
-      const canvas = scene.renderer.domElement;
-      const video = document.querySelector('video');
-      
       if (!video) {
         console.error('Video element not found');
         return;
       }
-      
-      // Asegurar que la escena AR esté renderizada
+
+      const tempCanvas = document.createElement('canvas');
+      const tempContext = tempCanvas.getContext('2d');
+
+      if (isHandAR) {
+        const mediaCanvas = document.querySelector('.output_canvas');
+        tempCanvas.width = mediaCanvas.width;
+        tempCanvas.height = mediaCanvas.height;
+      } else {
+        const canvas = scene.renderer.domElement;
+        tempCanvas.width = canvas.width;
+        tempCanvas.height = canvas.height;
+      }
+
       scene.renderer.render(scene.object3D, scene.camera);
 
-      if (isFaceAR) {
-        // Para AR facial, mantén el efecto espejo
-        tempContext.translate(tempCanvas.width, 0);
-        tempContext.scale(-1, 1);
-        tempContext.drawImage(video, 0, 0, tempCanvas.width, tempCanvas.height);
-        tempContext.setTransform(1, 0, 0, 1, 0, 0);
+      if (isHandAR) {
+        const mediaCanvas = document.querySelector('.output_canvas');
+        tempContext.drawImage(mediaCanvas, 0, 0, tempCanvas.width, tempCanvas.height);
+        tempContext.drawImage(scene.renderer.domElement, 0, 0, tempCanvas.width, tempCanvas.height);
       } else {
-        // Para AR de imagen, sin efecto espejo
-        tempContext.drawImage(video, 0, 0, tempCanvas.width, tempCanvas.height);
+        if (isFaceAR) {
+          tempContext.translate(tempCanvas.width, 0);
+          tempContext.scale(-1, 1);
+          tempContext.drawImage(video, 0, 0, tempCanvas.width, tempCanvas.height);
+          tempContext.setTransform(1, 0, 0, 1, 0, 0);
+        } else {
+          tempContext.drawImage(video, 0, 0, tempCanvas.width, tempCanvas.height);
+        }
+        tempContext.drawImage(scene.renderer.domElement, 0, 0, tempCanvas.width, tempCanvas.height);
       }
-      
-      // Superponer los elementos AR
-      tempContext.drawImage(canvas, 0, 0, tempCanvas.width, tempCanvas.height);
-    }
 
-    // Convertir el canvas temporal a un blob y guardar la imagen
-    tempCanvas.toBlob(function(blob) {
-      if (!blob) {
-        console.error('Failed to capture canvas');
+      const finalCanvas = document.createElement('canvas');
+      const finalContext = finalCanvas.getContext('2d');
+
+      const guideX = parseFloat(overlayCanvas.dataset.guideX) || 0;
+      const guideY = parseFloat(overlayCanvas.dataset.guideY) || 0;
+      const guideWidth = parseFloat(overlayCanvas.dataset.guideWidth) || tempCanvas.width;
+      const guideHeight = parseFloat(overlayCanvas.dataset.guideHeight) || tempCanvas.height;
+      const offsetX = parseFloat(overlayCanvas.dataset.offsetX) || 0;
+      const offsetY = parseFloat(overlayCanvas.dataset.offsetY) || 0;
+      const videoWidth = parseFloat(overlayCanvas.dataset.videoWidth) || tempCanvas.width;
+      const videoHeight = parseFloat(overlayCanvas.dataset.videoHeight) || tempCanvas.height;
+
+      finalCanvas.width = guideWidth;
+      finalCanvas.height = guideHeight;
+
+      const scaleX = tempCanvas.width / videoWidth;
+      const scaleY = tempCanvas.height / videoHeight;
+      const scaledGuideX = (guideX - offsetX) * scaleX;
+      const scaledGuideY = (guideY - offsetY) * scaleY;
+      const scaledGuideWidth = guideWidth * scaleX;
+      const scaledGuideHeight = guideHeight * scaleY;
+
+      if (isNaN(scaledGuideX) || isNaN(scaledGuideY) || isNaN(scaledGuideWidth) || isNaN(scaledGuideHeight)) {
+        console.error('Invalid crop dimensions:', { scaledGuideX, scaledGuideY, scaledGuideWidth, scaledGuideHeight });
         return;
       }
-      
-      const now = new Date();
-      const formattedDate = now.toISOString().replace(/:/g, '-').split('.')[0]; // Formato: AAAA-MM-DDTHH-MM-SS
-      const filename = `captura_${formattedDate}.png`;
 
-      const url = URL.createObjectURL(blob);
-      downloadLink.href = url;
-      downloadLink.download = filename;
-      downloadLink.click();
-    }, 'image/png');
+      const safeScaledGuideX = Math.max(0, Math.min(scaledGuideX, tempCanvas.width - scaledGuideWidth));
+      const safeScaledGuideY = Math.max(0, Math.min(scaledGuideY, tempCanvas.height - scaledGuideHeight));
+      const safeScaledGuideWidth = Math.min(scaledGuideWidth, tempCanvas.width - safeScaledGuideX);
+      const safeScaledGuideHeight = Math.min(scaledGuideHeight, tempCanvas.height - safeScaledGuideY);
+
+      finalContext.drawImage(
+        tempCanvas,
+        safeScaledGuideX, safeScaledGuideY, safeScaledGuideWidth, safeScaledGuideHeight,
+        0, 0, guideWidth, guideHeight
+      );
+
+      finalCanvas.toBlob(function(blob) {
+        if (!blob) {
+          console.error('Failed to capture canvas');
+          return;
+        }
+
+        const now = new Date();
+        const formattedDate = now.toISOString().replace(/:/g, '-').split('.')[0];
+        const filename = `captura_${formattedDate}.png`;
+
+        const url = URL.createObjectURL(blob);
+        downloadLink.href = url;
+        downloadLink.download = filename;
+        downloadLink.click();
+      }, 'image/png');
+    } catch (error) {
+      console.error('Error capturing image:', error);
+    }
   });
 });
