@@ -194,5 +194,45 @@
      <a id="download-link" style="display: none" aria-label="Descargar imagen">Descargar Imagen</a>
     </div>  
   </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', async function () {
+      const videoElement = document.querySelector('video');
+
+      if (!videoElement) {
+        console.error('Video element not found');
+        return;
+      }
+
+      try {
+        // Request the front camera with the highest resolution
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: {
+            facingMode: 'user', // Use the front camera
+            width: { ideal: 1920 }, // Request a high resolution width
+            height: { ideal: 1080 }, // Request a high resolution height
+          },
+        });
+
+        // Set the video stream to the video element
+        videoElement.srcObject = stream;
+        videoElement.play();
+
+        // Adjust the video container to match the video resolution
+        videoElement.addEventListener('loadedmetadata', () => {
+          const videoWidth = videoElement.videoWidth;
+          const videoHeight = videoElement.videoHeight;
+
+          const videoContainer = document.querySelector('.video-container');
+          if (videoContainer) {
+            videoContainer.style.width = `${videoWidth}px`;
+            videoContainer.style.height = `${videoHeight}px`;
+          }
+        });
+      } catch (error) {
+        console.error('Error accessing the camera:', error);
+      }
+    });
+  </script>
 </body>
 </html>
