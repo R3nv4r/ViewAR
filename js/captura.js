@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', function() {
       }
 
       const marginYPercent = 0;
-      const marginXPercent = 0.255;
+      const marginXPercent = 0;
       const marginX = videoWidth * marginXPercent;
       const marginY = videoHeight * marginYPercent;
       const guideX = offsetX + marginX;
