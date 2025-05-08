@@ -10,22 +10,25 @@ document.addEventListener('DOMContentLoaded', function() {
       return;
     }
 
-    // Create a temporary canvas for the final composition
-    const tempCanvas = document.createElement('canvas');
-    const canvas = scene.renderer.domElement;
+    // Access the video feed
     const video = document.querySelector('video');
-    if (!video) {
-      console.error('Video element not found');
+    if (!video || video.videoWidth === 0 || video.videoHeight === 0) {
+      console.error('Video element not found or not ready');
       return;
     }
 
+    // Use the video feed's resolution for the canvas
     const videoWidth = video.videoWidth;
     const videoHeight = video.videoHeight;
+
+    // Create a temporary canvas for the final composition
+    const tempCanvas = document.createElement('canvas');
     tempCanvas.width = videoWidth;
     tempCanvas.height = videoHeight;
     const tempContext = tempCanvas.getContext('2d');
 
-    // Ensure the AR scene is rendered
+    // Ensure the AR scene is rendered at the same resolution
+
     scene.renderer.render(scene.object3D, scene.camera);
 
     // Draw the video feed onto the temporary canvas (background)
@@ -37,6 +40,7 @@ document.addEventListener('DOMContentLoaded', function() {
     tempContext.setTransform(1, 0, 0, 1, 0, 0);
 
     // Draw the AR scene onto the temporary canvas (foreground)
+    const canvas = scene.renderer.domElement;
     tempContext.drawImage(canvas, 0, 0, tempCanvas.width, tempCanvas.height);
 
     // Convert the temporary canvas to a blob and save the image

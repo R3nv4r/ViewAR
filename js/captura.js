@@ -78,24 +78,6 @@ document.addEventListener('DOMContentLoaded', function() {
       const guideY = offsetY + marginY;
       const guideWidth = videoWidth - 2 * marginX;
       const guideHeight = videoHeight - 2 * marginY;
-/*
-      overlayCanvas.dataset.guideX = guideX || 0;
-      overlayCanvas.dataset.guideY = guideY || 0;
-      overlayCanvas.dataset.guideWidth = guideWidth || overlayCanvas.width;
-      overlayCanvas.dataset.guideHeight = guideHeight || overlayCanvas.height;
-      overlayCanvas.dataset.offsetX = offsetX || 0;
-      overlayCanvas.dataset.offsetY = offsetY || 0;
-      overlayCanvas.dataset.videoWidth = videoWidth || overlayCanvas.width;
-      overlayCanvas.dataset.videoHeight = videoHeight || overlayCanvas.height;
-
-      overlayContext.strokeStyle = 'white';
-      overlayContext.lineWidth = 2;
-      overlayContext.beginPath();
-      overlayContext.moveTo(guideX, guideY);
-      overlayContext.lineTo(guideX + guideWidth, guideY);
-      overlayContext.moveTo(guideX, guideY + guideHeight);
-      overlayContext.lineTo(guideX + guideWidth, guideY + guideHeight);
-      overlayContext.stroke();*/
     } catch (error) {
       console.error('Error initializing overlay:', error);
     }
@@ -103,92 +85,55 @@ document.addEventListener('DOMContentLoaded', function() {
 
   saveButton.addEventListener('click', function() {
     try {
-      const isFaceAR = scene.hasAttribute('mindar-face');
-      const isImageAR = scene.hasAttribute('mindar-image');
-      const isHandAR = document.querySelector('.output_canvas') !== null;
+      const scene = document.querySelector('a-scene');
+      const video = document.querySelector('video');
 
-      if (!video) {
-        console.error('Video element not found');
+      if (!scene || !scene.renderer) {
+        console.error('A-Frame scene or renderer not found');
         return;
       }
 
+      if (!video || video.videoWidth === 0 || video.videoHeight === 0) {
+        console.error('Video element not found or not ready');
+        return;
+      }
+
+      // Use the video feed's resolution for the canvas
+      const videoWidth = video.videoWidth;
+      const videoHeight = video.videoHeight;
+
+      // Create a temporary canvas for the final composition
       const tempCanvas = document.createElement('canvas');
+      tempCanvas.width = videoWidth;
+      tempCanvas.height = videoHeight;
       const tempContext = tempCanvas.getContext('2d');
 
-      if (isHandAR) {
-        const mediaCanvas = document.querySelector('.output_canvas');
-        tempCanvas.width = mediaCanvas.width;
-        tempCanvas.height = mediaCanvas.height;
-      } else {
-        const canvas = scene.renderer.domElement;
-        tempCanvas.width = canvas.width;
-        tempCanvas.height = canvas.height;
-      }
-
+      // Ensure the AR scene is rendered at the same resolution
+      
       scene.renderer.render(scene.object3D, scene.camera);
 
-      if (isHandAR) {
-        const mediaCanvas = document.querySelector('.output_canvas');
-        tempContext.drawImage(mediaCanvas, 0, 0, tempCanvas.width, tempCanvas.height);
-        tempContext.drawImage(scene.renderer.domElement, 0, 0, tempCanvas.width, tempCanvas.height);
-      } else {
-        if (isFaceAR) {
-          tempContext.translate(tempCanvas.width, 0);
-          tempContext.scale(-1, 1);
-          tempContext.drawImage(video, 0, 0, tempCanvas.width, tempCanvas.height);
-          tempContext.setTransform(1, 0, 0, 1, 0, 0);
-        } else {
-          tempContext.drawImage(video, 0, 0, tempCanvas.width, tempCanvas.height);
-        }
-        tempContext.drawImage(scene.renderer.domElement, 0, 0, tempCanvas.width, tempCanvas.height);
-      }
+      // Draw the video feed onto the temporary canvas (background)
+      tempContext.translate(tempCanvas.width, 0); // Mirror effect for facial AR
+      tempContext.scale(-1, 1);
+      tempContext.drawImage(video, 0, 0, tempCanvas.width, tempCanvas.height);
 
-      const finalCanvas = document.createElement('canvas');
-      const finalContext = finalCanvas.getContext('2d');
+      // Reset the transformation matrix
+      tempContext.setTransform(1, 0, 0, 1, 0, 0);
 
-      const guideX = parseFloat(overlayCanvas.dataset.guideX) || 0;
-      const guideY = parseFloat(overlayCanvas.dataset.guideY) || 0;
-      const guideWidth = parseFloat(overlayCanvas.dataset.guideWidth) || tempCanvas.width;
-      const guideHeight = parseFloat(overlayCanvas.dataset.guideHeight) || tempCanvas.height;
-      const offsetX = parseFloat(overlayCanvas.dataset.offsetX) || 0;
-      const offsetY = parseFloat(overlayCanvas.dataset.offsetY) || 0;
-      const videoWidth = parseFloat(overlayCanvas.dataset.videoWidth) || tempCanvas.width;
-      const videoHeight = parseFloat(overlayCanvas.dataset.videoHeight) || tempCanvas.height;
+      // Draw the AR scene onto the temporary canvas (foreground)
+      const canvas = scene.renderer.domElement;
+      tempContext.drawImage(canvas, 0, 0, tempCanvas.width, tempCanvas.height);
 
-      finalCanvas.width = guideWidth;
-      finalCanvas.height = guideHeight;
-
-      const scaleX = tempCanvas.width / videoWidth;
-      const scaleY = tempCanvas.height / videoHeight;
-      const scaledGuideX = (guideX - offsetX) * scaleX;
-      const scaledGuideY = (guideY - offsetY) * scaleY;
-      const scaledGuideWidth = guideWidth * scaleX;
-      const scaledGuideHeight = guideHeight * scaleY;
-
-      if (isNaN(scaledGuideX) || isNaN(scaledGuideY) || isNaN(scaledGuideWidth) || isNaN(scaledGuideHeight)) {
-        console.error('Invalid crop dimensions:', { scaledGuideX, scaledGuideY, scaledGuideWidth, scaledGuideHeight });
-        return;
-      }
-
-      const safeScaledGuideX = Math.max(0, Math.min(scaledGuideX, tempCanvas.width - scaledGuideWidth));
-      const safeScaledGuideY = Math.max(0, Math.min(scaledGuideY, tempCanvas.height - scaledGuideHeight));
-      const safeScaledGuideWidth = Math.min(scaledGuideWidth, tempCanvas.width - safeScaledGuideX);
-      const safeScaledGuideHeight = Math.min(scaledGuideHeight, tempCanvas.height - safeScaledGuideY);
-
-      finalContext.drawImage(
-        tempCanvas,
-        safeScaledGuideX, safeScaledGuideY, safeScaledGuideWidth, safeScaledGuideHeight,
-        0, 0, guideWidth, guideHeight
-      );
-
-      finalCanvas.toBlob(function(blob) {
+      // Convert the temporary canvas to a blob and save the image
+      tempCanvas.toBlob(function(blob) {
         if (!blob) {
           console.error('Failed to capture canvas');
           return;
         }
 
+        // Generate a filename using the current date and time
         const now = new Date();
-        const formattedDate = now.toISOString().replace(/:/g, '-').split('.')[0];
+        const formattedDate = now.toISOString().replace(/:/g, '-').split('.')[0]; // Format: YYYY-MM-DDTHH-MM-SS
         const filename = `captura_${formattedDate}.png`;
 
         const url = URL.createObjectURL(blob);
