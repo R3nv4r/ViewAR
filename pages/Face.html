@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+l>
 <html lang="es">
 <head>
     
@@ -20,12 +20,12 @@
   }</style>
 
 <body>
-    <!-- Loading Screen -->
-    <div id="loading-screen" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; color: #fff; display: flex; justify-content: center; align-items: center; z-index: 1000;">
-      <h1>Loading...</h1>
-    </div>
+   <!-- Loading Screen -->
+   <div id="loading-screen">
+    <h1>Loading...</h1>
+  </div>
   <div class="video-container">
-    <video autoplay playsinline muted></video>
+    
     <a-scene mindar-face embedded color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
       <a-assets>
       <!-- Cargar los modelos 3D -->
@@ -199,44 +199,6 @@
     </div>  
   </div>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', async function () {
-      const videoElement = document.querySelector('video');
-
-      if (!videoElement) {
-        console.error('Video element not found');
-        return;
-      }
-
-      try {
-        // Request the front camera with the highest resolution
-        const stream = await navigator.mediaDevices.getUserMedia({
-          video: {
-            facingMode: 'user', // Use the front camera
-            width: { ideal: 1920 }, // Request a high resolution width
-            height: { ideal: 1080 }, // Request a high resolution height
-          },
-        });
-
-        // Set the video stream to the video element
-        videoElement.srcObject = stream;
-        videoElement.play();
-
-        // Adjust the video container to match the video resolution
-        videoElement.addEventListener('loadedmetadata', () => {
-          const videoWidth = videoElement.videoWidth;
-          const videoHeight = videoElement.videoHeight;
-
-          const videoContainer = document.querySelector('.video-container');
-          if (videoContainer) {
-            videoContainer.style.width = `${videoWidth}px`;
-            videoContainer.style.height = `${videoHeight}px`;
-          }
-        });
-      } catch (error) {
-        console.error('Error accessing the camera:', error);
-      }
-    });
-  </script>
+  <script src="../js/loadingScreen.js"></script>
 </body>
 </html>

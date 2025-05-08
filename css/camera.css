@@ -178,13 +178,15 @@ a-scene {
   left: 0;
   width: 100%;
   height: 100%;
-  background: #000; /* Black background */
+  background: #269dd8; /* Black background */
   color: #fff; /* White text */
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   z-index: 1000; /* Ensure it stays on top */
+  opacity: 1; /* Fully visible by default */
+  transition: opacity 2s ease; /* Smooth fade-out effect */
 }
 
 #loading-image {

@@ -5,7 +5,13 @@ document.addEventListener('DOMContentLoaded', function () {
     function hideLoadingScreen() {
         if (loadingScreen) {
             console.log('Hiding loading screen');
-            loadingScreen.style.display = 'none';
+            // Add a fade-out effect by setting opacity to 0
+            loadingScreen.style.opacity = '0';
+
+            // Wait for the fade-out transition to complete before hiding the element
+            setTimeout(() => {
+                loadingScreen.style.display = 'none';
+            }, 3000); // Match the duration of the CSS transition
         }
     }
 
@@ -16,14 +22,14 @@ document.addEventListener('DOMContentLoaded', function () {
     }, 10000);
 
     if (scene) {
-        // Esperar a que la escena de A-Frame esté lista
+        // Wait for the A-Frame scene to be ready
         scene.addEventListener('loaded', function () {
             console.log('A-Frame scene loaded');
             hideLoadingScreen();
             clearTimeout(fallbackTimeout);
         }, { once: true });
 
-        // También intentar con el evento de MindAR
+        // Also try with the MindAR event
         scene.addEventListener('targetFound', function () {
             console.log('MindAR target found');
             hideLoadingScreen();
