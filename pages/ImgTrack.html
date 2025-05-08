@@ -14,20 +14,10 @@
   <script src="../js/captura.js"></script>
 </head>
 
-<style>
-  .a-enter-vr-button {
+<style>.a-enter-vr-button {
     display: none !important;
-  }
-  #overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 5; /* Asegura que esté por encima de la escena pero debajo de los controles */
-  }
-</style>
+  }</style>
+
 <body>
   <div class="video-container">
     <a-scene mindar-image="imageTargetSrc:../targets.mind; filterMinCF:.5; filterBeta: 10; warmupTolerance: 1" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: true">
