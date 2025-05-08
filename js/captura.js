@@ -113,8 +113,7 @@ document.addEventListener('DOMContentLoaded', function() {
       scene.renderer.render(scene.object3D, scene.camera);
 
       // Draw the video feed onto the temporary canvas (background)
-      tempContext.translate(tempCanvas.width, 0); // Mirror effect for facial AR
-      tempContext.scale(-1, 1);
+    
       tempContext.drawImage(video, 0, 0, tempCanvas.width, tempCanvas.height);
 
       // Reset the transformation matrix
