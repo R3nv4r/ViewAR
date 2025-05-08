@@ -8,7 +8,7 @@
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-face-aframe.prod.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v7.0.0/dist/aframe-extras.min.js"></script>
-  
+  <script src="../js/rostro_ar.js"></script>
 
   <title>Shorts Clone</title>
   <link rel="stylesheet" href="../css/camera.css">
@@ -21,7 +21,7 @@
 
 <body>
   <div class="video-container">
-    <canvas id="overlay"></canvas>
+    
     <a-scene mindar-face embedded color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
       <a-assets>
       <!-- Cargar los modelos 3D -->
@@ -193,14 +193,6 @@
      </button>
      <a id="download-link" style="display: none" aria-label="Descargar imagen">Descargar Imagen</a>
     </div>  
-    <script src="../js/captura.js"></script>
-    <!--div class="video-overlay">
-      <div class="video-info">
-        <h2>Casa del agua</h2>
-        <p>Descripción del video</p>
-        <button class="return-button" onclick="window.location.href='../Index.html'" aria-label="Volver a la página principal">atras</button>
-      </div>
-    </div-->
   </div>
 </body>
 </html>
