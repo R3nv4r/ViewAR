@@ -3,26 +3,23 @@ document.addEventListener('DOMContentLoaded', function() {
   const downloadLink = document.getElementById('download-link');
   const overlayCanvas = document.getElementById('overlay');
 
-  // Verificar si overlayCanvas existe antes de intentar obtener el contexto
   if (!overlayCanvas) {
     console.error('Overlay canvas not found. Please ensure <canvas id="overlay"> exists in the HTML.');
-    return; // Detener la ejecución si el canvas no se encuentra
+    return;
   }
 
   const overlayContext = overlayCanvas.getContext('2d');
   if (!overlayContext) {
     console.error('Failed to get 2D context for overlay canvas.');
-    return; // Detener la ejecución si no se puede obtener el contexto
+    return;
   }
 
-  // Detectar la escena A-Frame
   const scene = document.querySelector('a-scene');
   if (!scene) {
     console.error('A-Frame scene not found');
     return;
   }
 
-  // Obtener el elemento de video que MindAR usa internamente
   let video;
   const waitForVideo = setInterval(() => {
     video = document.querySelector('video');
@@ -32,7 +29,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }, 100);
 
-  // Ajustar las dimensiones del overlay y dibujar las líneas de guía
   function initializeOverlay() {
     try {
       const videoContainer = document.querySelector('.video-container');
@@ -60,15 +56,29 @@ document.addEventListener('DOMContentLoaded', function() {
         offsetY = (overlayCanvas.height - videoHeight) / 2;
       }
 
-      const marginYPercent = 0;
-      const marginXPercent = 0;
+      // Calcular márgenes dinámicamente según las dimensiones de la pantalla
+      // Definimos un margen base en píxeles y lo ajustamos según el tamaño de la pantalla
+      const baseMarginX = 20; // Margen base en píxeles para los lados
+      const baseMarginY = 40; // Margen base en píxeles para arriba y abajo
+      const minMarginPercent = 0.05; // Mínimo margen porcentual (5%)
+      const maxMarginPercent = 0.2;  // Máximo margen porcentual (20%)
+
+      // Calcular márgenes como un porcentaje del tamaño, pero con límites
+      let marginXPercent = baseMarginX / videoWidth;
+      let marginYPercent = baseMarginY / videoHeight;
+
+      // Asegurar que los márgenes estén dentro de los límites
+      marginXPercent = Math.max(minMarginPercent, Math.min(marginXPercent, maxMarginPercent));
+      marginYPercent = Math.max(minMarginPercent, Math.min(marginYPercent, maxMarginPercent));
+
+      // Calcular los márgenes en píxeles
       const marginX = videoWidth * marginXPercent;
       const marginY = videoHeight * marginYPercent;
       const guideX = offsetX + marginX;
       const guideY = offsetY + marginY;
       const guideWidth = videoWidth - 2 * marginX;
       const guideHeight = videoHeight - 2 * marginY;
-
+/*
       overlayCanvas.dataset.guideX = guideX || 0;
       overlayCanvas.dataset.guideY = guideY || 0;
       overlayCanvas.dataset.guideWidth = guideWidth || overlayCanvas.width;
@@ -85,13 +95,12 @@ document.addEventListener('DOMContentLoaded', function() {
       overlayContext.lineTo(guideX + guideWidth, guideY);
       overlayContext.moveTo(guideX, guideY + guideHeight);
       overlayContext.lineTo(guideX + guideWidth, guideY + guideHeight);
-      overlayContext.stroke();
+      overlayContext.stroke();*/
     } catch (error) {
       console.error('Error initializing overlay:', error);
     }
   }
 
-  // Manejar el evento de captura
   saveButton.addEventListener('click', function() {
     try {
       const isFaceAR = scene.hasAttribute('mindar-face');
