@@ -22,7 +22,6 @@
       <div id="loading-screen">
         <h1>Loading...</h1>
       </div>
-       <div id="description-container"></div>
   <div class="video-container">
     <canvas id="overlay"></canvas>
     <a-scene mindar-image="imageTargetSrc:../targets.mind; " color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
@@ -73,37 +72,6 @@
   <script src="../js/loadingScreen.js"></script>
   <script src="../js/captura.js"></script>
 
-      <!-- Script para manejar el texto descriptivo -->
-    <script>
-      // Definir textos descriptivos para cada targetIndex
-      const descriptions = {
-        0: "Recolección: El agua se acumula en ríos, lagos y océanos.",
-        1: "Evaporación: El agua se transforma en vapor por el calor del sol.",
-        2: "Condensación: El vapor de agua se enfría y forma nubes.",
-        3: "Precipitación: El agua cae de las nubes en forma de lluvia, nieve o granizo.",
-        4: "Flauta: Un instrumento musical que representa la interacción con el agua."
-      };
-
-      // Obtener el contenedor de descripción
-      const descriptionContainer = document.getElementById('description-container');
-
-      // Escuchar eventos de los marcadores
-      document.addEventListener('DOMContentLoaded', () => {
-        const scene = document.querySelector('a-scene');
-        scene.addEventListener('targetFound', (event) => {
-          const targetIndex = event.target.getAttribute('mindar-image-target').targetIndex;
-          // Mostrar el texto correspondiente
-          descriptionContainer.textContent = descriptions[targetIndex] || "Descripción no disponible";
-          descriptionContainer.style.display = 'block';
-        });
-
-        scene.addEventListener('targetLost', () => {
-          // Ocultar el texto cuando se pierde el marcador
-          descriptionContainer.style.display = 'none';
-          descriptionContainer.textContent = '';
-        });
-      });
-    </script>
   <!--div class="video-overlay">
       <div class="video-info">
         
