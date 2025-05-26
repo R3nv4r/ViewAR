@@ -39,7 +39,7 @@
         <a-asset-item id="presipitacion" src="../assets/4.glb"></a-asset-item>
       </a-assets>
       <!--/////////////////////////////////////////////////////////////////////////////////////-->
-      <a-camera position="0 0 0" ></a-camera>
+      <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
       <!--detonadores, aqui se modifica el tamaño, posicion y la rotacion del modelo para ajustar, para identificar los modelos con 
       sus detonadores es con targetIndex: "#" iniciando del 0, el orden sera segun como se compilo en la pagina los detonadores -->
@@ -52,6 +52,7 @@
       <a-entity mindar-image-target="targetIndex: 1" visible="false">
         <a-gltf-model src="#evaporacion" position="0 0 0" rotation="0 0 0" animation-mixer></a-gltf-model>
         
+       
       </a-entity>
 
       <a-entity mindar-image-target="targetIndex: 2">
@@ -64,7 +65,10 @@
     </a-gltf-model>
       </a-entity>
 
- 
+      <a-entity mindar-image-target="targetIndex: 4">
+        <a-gltf-model src="#flauta" position="0 0 0" scale="0.5 0.5 0.5" rotation="0 -90 -30" animation-Mixer>
+    </a-gltf-model>
+      </a-entity>
    <!--/////////////////////////////////////////////////////////////////////////////////////-->
     </a-scene>
     
