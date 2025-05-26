@@ -22,6 +22,7 @@
       <div id="loading-screen">
         <h1>Loading...</h1>
       </div>
+       <div id="description-container"></div>
   <div class="video-container">
     <canvas id="overlay"></canvas>
     <a-scene mindar-image="imageTargetSrc:../targets.mind; " color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
@@ -39,7 +40,7 @@
         <a-asset-item id="presipitacion" src="../assets/4.glb"></a-asset-item>
       </a-assets>
       <!--/////////////////////////////////////////////////////////////////////////////////////-->
-      <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+      <a-camera position="0 0 0" ></a-camera>
 
       <!--detonadores, aqui se modifica el tamaño, posicion y la rotacion del modelo para ajustar, para identificar los modelos con 
       sus detonadores es con targetIndex: "#" iniciando del 0, el orden sera segun como se compilo en la pagina los detonadores -->
@@ -49,31 +50,10 @@
     </a-gltf-model>
       </a-entity>
 
-      <a-entity mindar-image-target="targetIndex: 1">
+      <a-entity mindar-image-target="targetIndex: 1" visible="false">
         <a-gltf-model src="#evaporacion" position="0 0 0" rotation="0 0 0" animation-mixer></a-gltf-model>
+        
       </a-entity>
-      <!-- Fixed 2D overlay text on screen -->
-      <div style="position: fixed; top: 30px; left: 50%; transform: translateX(-50%); z-index: 1000; color: #FFD700; font-size: 2em; font-family: 'Exo 2', sans-serif; text-shadow: 1px 1px 4px #000;" id="evaporacion-text">
-        ¡Evaporación detectada!
-      </div>
-      <script>
-        // Show/hide overlay text based on target detection
-        document.addEventListener("DOMContentLoaded", function() {
-          const scene = document.querySelector("a-scene");
-          const textDiv = document.getElementById("evaporacion-text");
-          textDiv.style.display = "none";
-          scene.addEventListener("targetFound", e => {
-        if (e && e.detail && e.detail.targetIndex === 1) {
-          textDiv.style.display = "block";
-        }
-          });
-          scene.addEventListener("targetLost", e => {
-        if (e && e.detail && e.detail.targetIndex === 1) {
-          textDiv.style.display = "none";
-        }
-          });
-        });
-      </script>
 
       <a-entity mindar-image-target="targetIndex: 2">
         <a-gltf-model src="#condensacion" position="0 0 0" scale="1 1 1" rotation="0  0  0" animation-Mixer>
@@ -85,10 +65,7 @@
     </a-gltf-model>
       </a-entity>
 
-      <a-entity mindar-image-target="targetIndex: 4">
-        <a-gltf-model src="#flauta" position="0 0 0" scale="0.5 0.5 0.5" rotation="0 -90 -30" animation-Mixer>
-    </a-gltf-model>
-      </a-entity>
+ 
    <!--/////////////////////////////////////////////////////////////////////////////////////-->
     </a-scene>
     
@@ -96,6 +73,37 @@
   <script src="../js/loadingScreen.js"></script>
   <script src="../js/captura.js"></script>
 
+      <!-- Script para manejar el texto descriptivo -->
+    <script>
+      // Definir textos descriptivos para cada targetIndex
+      const descriptions = {
+        0: "Recolección: El agua se acumula en ríos, lagos y océanos.",
+        1: "Evaporación: El agua se transforma en vapor por el calor del sol.",
+        2: "Condensación: El vapor de agua se enfría y forma nubes.",
+        3: "Precipitación: El agua cae de las nubes en forma de lluvia, nieve o granizo.",
+        4: "Flauta: Un instrumento musical que representa la interacción con el agua."
+      };
+
+      // Obtener el contenedor de descripción
+      const descriptionContainer = document.getElementById('description-container');
+
+      // Escuchar eventos de los marcadores
+      document.addEventListener('DOMContentLoaded', () => {
+        const scene = document.querySelector('a-scene');
+        scene.addEventListener('targetFound', (event) => {
+          const targetIndex = event.target.getAttribute('mindar-image-target').targetIndex;
+          // Mostrar el texto correspondiente
+          descriptionContainer.textContent = descriptions[targetIndex] || "Descripción no disponible";
+          descriptionContainer.style.display = 'block';
+        });
+
+        scene.addEventListener('targetLost', () => {
+          // Ocultar el texto cuando se pierde el marcador
+          descriptionContainer.style.display = 'none';
+          descriptionContainer.textContent = '';
+        });
+      });
+    </script>
   <!--div class="video-overlay">
       <div class="video-info">
         
