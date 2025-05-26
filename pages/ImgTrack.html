@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -46,27 +45,48 @@
       sus detonadores es con targetIndex: "#" iniciando del 0, el orden sera segun como se compilo en la pagina los detonadores -->
      <!--/////////////////////////////////////////////////////////////////////////////////////-->
       <a-entity mindar-image-target="targetIndex: 0">
-        <a-gltf-model src="#recoleccion" position="0 0 0" rotation="0  0  0" animation-Mixer>
+        <a-gltf-model src="#recoleccion" position="0 0 0" scale="1 1 1" rotation="0  0  0" animation-Mixer>
     </a-gltf-model>
       </a-entity>
 
       <a-entity mindar-image-target="targetIndex: 1">
-        <a-gltf-model src="#evaporacion" position="0 0 0" rotation="0  0  0" animation-Mixer>
-    </a-gltf-model>
+        <a-gltf-model src="#evaporacion" position="0 0 0" rotation="0 0 0" animation-mixer></a-gltf-model>
       </a-entity>
+      <!-- Fixed 2D overlay text on screen -->
+      <div style="position: fixed; top: 30px; left: 50%; transform: translateX(-50%); z-index: 1000; color: #FFD700; font-size: 2em; font-family: 'Exo 2', sans-serif; text-shadow: 1px 1px 4px #000;" id="evaporacion-text">
+        ¡Evaporación detectada!
+      </div>
+      <script>
+        // Show/hide overlay text based on target detection
+        document.addEventListener("DOMContentLoaded", function() {
+          const scene = document.querySelector("a-scene");
+          const textDiv = document.getElementById("evaporacion-text");
+          textDiv.style.display = "none";
+          scene.addEventListener("targetFound", e => {
+        if (e && e.detail && e.detail.targetIndex === 1) {
+          textDiv.style.display = "block";
+        }
+          });
+          scene.addEventListener("targetLost", e => {
+        if (e && e.detail && e.detail.targetIndex === 1) {
+          textDiv.style.display = "none";
+        }
+          });
+        });
+      </script>
 
       <a-entity mindar-image-target="targetIndex: 2">
-        <a-gltf-model src="#condensacion" position="0 0 0" " rotation="0  0  0" animation-Mixer>
+        <a-gltf-model src="#condensacion" position="0 0 0" scale="1 1 1" rotation="0  0  0" animation-Mixer>
     </a-gltf-model>
       </a-entity>
 
       <a-entity mindar-image-target="targetIndex: 3">
-        <a-gltf-model src="#presipitacion" position="0 0 0"  rotation="0  0  0" animation-Mixer>
+        <a-gltf-model src="#presipitacion" position="0 0 0" scale="0.5 0.5 0.5" rotation="0  0  0" animation-Mixer>
     </a-gltf-model>
       </a-entity>
 
       <a-entity mindar-image-target="targetIndex: 4">
-        <a-gltf-model src="#flauta" position="0 0 0"  rotation="0 -90 -30" animation-Mixer>
+        <a-gltf-model src="#flauta" position="0 0 0" scale="0.5 0.5 0.5" rotation="0 -90 -30" animation-Mixer>
     </a-gltf-model>
       </a-entity>
    <!--/////////////////////////////////////////////////////////////////////////////////////-->
