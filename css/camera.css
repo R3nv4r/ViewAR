@@ -9,7 +9,7 @@ body {
   height: 100vh;
   width: 100vw;
   overflow: hidden; 
-  background-color: #000; 
+  background-color: #000000; 
   display: flex;
   justify-content: center;
   align-items: center;
@@ -124,7 +124,7 @@ body {
 @media (min-width: 768px) {
   .video-container {
       border-radius: 10px;
-      box-shadow: 0 0 0px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
   }
 }
 
@@ -222,30 +222,3 @@ a-scene {
   }
 }
 
-    /* Estilo para el botón de pantalla completa */
-    .fullscreen-btn {
-      position: fixed;
-      top: 10px;
-      right: 10px;
-      z-index: 1000; /* Asegura que el botón esté por encima de la escena AR */
-      padding: 10px 15px;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 16px;
-      transition: background-color 0.3s;
-    }
-
-    .fullscreen-btn:hover {
-      background-color: #0056b3;
-    }
-    
-    /* Ajuste para móviles */
-    @media (max-width: 600px) {
-      .fullscreen-btn {
-        padding: 8px 12px;
-        font-size: 14px;
-      }
-    }
