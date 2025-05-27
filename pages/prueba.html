@@ -12,7 +12,6 @@
   <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v7.0.0/dist/aframe-extras.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
-  
   <style>
     /* Oculta el botón de VR de A-Frame */
     .a-enter-vr-button {
@@ -20,7 +19,6 @@
     }
 
     /* Estilo para el botón de pantalla completa */
-    
     .fullscreen-btn {
       display: none; /* Oculto por defecto */
       position: fixed;
@@ -90,7 +88,7 @@
         font-size: 30px;
         font-family: nunito, sans-serif;
         text-align: center;
-        padding-top: 70%;
+        padding-top: 40%;
         padding-left: 10%;
         padding-right: 10%;
         /* Ajustar para que el mensaje no sea tapado por el botón */
@@ -104,43 +102,43 @@
   <div id="orientation-message">
     Activa la pantalla completa y rota tu dispositivo a modo horizontal para continuar.
   </div>
-
+  
   <!-- Botón de pantalla completa -->
   <button class="fullscreen-btn" onclick="toggleFullScreen()">
-   <svg width="60" height="60" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M7 14H5V19H10V17H7V14ZM5 10H7V7H10V5H5V10ZM17 17H14V19H19V14H17V17ZM14 5V7H17V10H19V5H14Z" fill="#F0F7FF"/>
-   </svg>
+    <svg width="60" height="60" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M7 14H5V19H10V17H7V14ZM5 10H7V7H10V5H5V10ZM17 17H14V19H19V14H17V17ZM14 5V7H17V10H19V5H14Z" fill="#F0F7FF"/>
+    </svg>
   </button>
-
+  
   <!-- Loading Screen -->
   <div id="loading-screen">
     <h1>Cargando...</h1>
-  </div>
   
-  <div class="video-container">
-    <canvas id="overlay"></canvas>
-    <a-scene mindar-image="imageTargetSrc:../targets.mind;filterMinCF:0.0001; filterBeta: 10" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
-      <a-assets>
-        <a-asset-item id="recoleccion" src="../assets/1.glb"></a-asset-item>
-        <a-asset-item id="evaporacion" src="../assets/2.glb"></a-asset-item>
-        <a-asset-item id="condensacion" src="../assets/3.glb"></a-asset-item>
-        <a-asset-item id="presipitacion" src="../assets/4.glb"></a-asset-item>
-      </a-assets>
-      <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+    <div class="video-container">
+      <canvas id="overlay"></canvas>
+      <a-scene mindar-image="imageTargetSrc:../targets.mind;filterMinCF:0.0001; filterBeta: 10" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
+        <a-assets>
+          <a-asset-item id="recoleccion" src="../assets/1.glb"></a-asset-item>
+          <a-asset-item id="evaporacion" src="../assets/2.glb"></a-asset-item>
+          <a-asset-item id="condensacion" src="../assets/3.glb"></a-asset-item>
+          <a-asset-item id="presipitacion" src="../assets/4.glb"></a-asset-item>
+        </a-assets>
+        <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
-      <a-entity mindar-image-target="targetIndex: 0">
-        <a-gltf-model src="#recoleccion" position="0 0 0" scale="1 1 1" rotation="0 0 0" animation-mixer></a-gltf-model>
-      </a-entity>
-      <a-entity mindar-image-target="targetIndex: 1">
-        <a-gltf-model src="#evaporacion" position="0 0 0" scale="1 1 1" rotation="0 0 0" animation-mixer></a-gltf-model>
-      </a-entity>
-      <a-entity mindar-image-target="targetIndex: 2">
-        <a-gltf-model src="#condensacion" position="0 0 0" scale="1 1 1" rotation="0 0 0" animation-mixer></a-gltf-model>
-      </a-entity>
-      <a-entity mindar-image-target="targetIndex: 3">
-        <a-gltf-model src="#presipitacion" position="0 0 0" scale="1 1 1" rotation="0 0 0" animation-mixer></a-gltf-model>
-      </a-entity>
-    </a-scene>
+        <a-entity mindar-image-target="targetIndex: 0">
+          <a-gltf-model src="#recoleccion" position="0 0 0" scale="1 1 1" rotation="0 0 0" animation-mixer></a-gltf-model>
+        </a-entity>
+        <a-entity mindar-image-target="targetIndex: 1">
+          <a-gltf-model src="#evaporacion" position="0 0 0" scale="1 1 1" rotation="0 0 0" animation-mixer></a-gltf-model>
+        </a-entity>
+        <a-entity mindar-image-target="targetIndex: 2">
+          <a-gltf-model src="#condensacion" position="0 0 0" scale="1 1 1" rotation="0 0 0" animation-mixer></a-gltf-model>
+        </a-entity>
+        <a-entity mindar-image-target="targetIndex: 3">
+          <a-gltf-model src="#presipitacion" position="0 0 0" scale="1 1 1" rotation="0 0 0" animation-mixer></a-gltf-model>
+        </a-entity>
+      </a-scene>
+    </div>
   </div>
 
   <script>
