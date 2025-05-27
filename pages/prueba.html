@@ -24,11 +24,11 @@
     .fullscreen-btn {
       display: none; /* Oculto por defecto */
       position: fixed;
-      top: 10px;
-      right: 10px;
+      top: 60%;
+      right: 40%;
       z-index: 2000; /* Asegura que esté por encima del mensaje de orientación */
       padding: 10px 15px;
-      background-color: #87878700;
+      background-color: #536b7d75;
       color: rgba(255, 255, 255, 0);
       border: none;
       border-radius: 5px;
@@ -98,6 +98,7 @@
     }
   </style>
 </head>
+
 <body>
   <!-- Mensaje de orientación -->
   <div id="orientation-message">
@@ -107,13 +108,13 @@
   <!-- Botón de pantalla completa -->
   <button class="fullscreen-btn" onclick="toggleFullScreen()">
    <svg width="60" height="60" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M7 14H5V19H10V17H7V14ZM5 10H7V7H10V5H5V10ZM17 17H14V19H19V14H17V17ZM14 5V7H17V10H19V5H14Z" fill="#F0F7FF"/>
-</svg>
+    <path d="M7 14H5V19H10V17H7V14ZM5 10H7V7H10V5H5V10ZM17 17H14V19H19V14H17V17ZM14 5V7H17V10H19V5H14Z" fill="#F0F7FF"/>
+   </svg>
   </button>
 
   <!-- Loading Screen -->
   <div id="loading-screen">
-    <h1>Loading...</h1>
+    <h1>Cargando...</h1>
   </div>
   
   <div class="video-container">
@@ -174,6 +175,6 @@
   </script>
 
   <script src="../js/loadingScreen.js"></script>
-  <script src="../js/captura.js"></script>
+  
 </body>
 </html>
