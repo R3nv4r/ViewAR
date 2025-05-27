@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -6,17 +5,43 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>Menú Principal</title>
   <link rel="stylesheet" href="css/style.css">
-  
 </head>
 <body>
-
   <h1>Menú Principal</h1>
 
   <div class="menu-container">
     <button onclick="window.location.href='pages/ImgTrack.html'">Realidad Aumentada con Imágenes</button>
     <button onclick="window.location.href='pages/Face.html'">Realidad aumentada sobre rostro</button>
     <button onclick="window.location.href='pages/Mano.html'">Realidad aumentada sobre mano</button>
+    <button onclick="toggleFullScreen()">Pantalla Completa</button>
   </div>
 
+  <script>
+    function toggleFullScreen() {
+      // Selecciona el elemento que quieres poner en pantalla completa (en este caso, el <body>)
+      const elem = document.documentElement;
+
+      // Verifica si ya está en pantalla completa
+      if (!document.fullscreenElement) {
+        // Solicita pantalla completa
+        if (elem.requestFullscreen) {
+          elem.requestFullscreen();
+        } else if (elem.webkitRequestFullscreen) { /* Safari */
+          elem.webkitRequestFullscreen();
+        } else if (elem.msRequestFullscreen) { /* IE11 */
+          elem.msRequestFullscreen();
+        }
+      } else {
+        // Sale de pantalla completa
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) { /* Safari */
+          document.webkitExitFullscreen();
+        } else if (document.msExitFullscreen) { /* IE11 */
+          document.msExitFullscreen();
+        }
+      }
+    }
+  </script>
 </body>
 </html>
