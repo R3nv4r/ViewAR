@@ -19,10 +19,7 @@
   </style>
 </head>
 <body>
-  <!-- Mensaje de orientación -->
-  <div id="orientation-message">
-    Activa la pantalla completa y rota tu dispositivo a modo horizontal para continuar.
-  </div>
+ 
   
   <!-- Botón de pantalla completa -->
   <button class="fullscreen-btn" onclick="toggleFullScreen()">
@@ -64,28 +61,6 @@
     <button class="fullscreen-btn" onclick="toggleFullScreen()">Pantalla Completa</button>
   </div>
 
-  <script>
-    function toggleFullScreen() {
-      const elem = document.documentElement;
-      if (!document.fullscreenElement) {
-        if (elem.requestFullscreen) {
-          elem.requestFullscreen();
-        } else if (elem.webkitRequestFullscreen) { /* Safari */
-          elem.webkitRequestFullscreen();
-        } else if (elem.msRequestFullscreen) { /* IE11 */
-          elem.msRequestFullscreen();
-        }
-      } else {
-        if (document.exitFullscreen) {
-          document.exitFullscreen();
-        } else if (document.webkitExitFullscreen) { /* Safari */
-          document.webkitExitFullscreen();
-        } else if (document.msExitFullscreen) { /* IE11 */
-          document.msExitFullscreen();
-        }
-      }
-    }
-  </script>
 
   <script src="../js/loadingScreen.js"></script>
   <script src="../js/captura.js"></script>
