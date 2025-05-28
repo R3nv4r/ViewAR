@@ -4,99 +4,20 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>RA detonadores</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Audiowide&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../css/camera.css"> 
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=camera" />
+  <link rel="stylesheet" href="../css/detonadores.css"> 
   <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v7.0.0/dist/aframe-extras.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+  
   <style>
     /* Oculta el botón de VR de A-Frame */
     .a-enter-vr-button {
       display: none !important;
     }
 
-    /* Estilo para el botón de pantalla completa */
-    .fullscreen-btn {
-      display: none; /* Oculto por defecto */
-      position: fixed;
-      top: 60%;
-      right: 40%;
-      z-index: 2000; /* Asegura que esté por encima del mensaje de orientación */
-      padding: 10px 15px;
-      background-color: #536b7d75;
-      color: rgba(255, 255, 255, 0);
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 16px;
-      transition: background-color 0.3s;
-    }
 
-    .fullscreen-btn:hover {
-      background-color: #0057b300;
-    }
-
-    /* Mensaje para forzar orientación horizontal */
-    #orientation-message {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: #292B2C;
-      color: white;
-      text-align: center;
-      padding-top: 40%;
-      font-size: 18px;
-      z-index: 1000; /* Debajo del botón de pantalla completa */
-    }
-
-    /* Mostrar mensaje y botón en modo vertical */
-    @media (orientation: portrait) {
-      body > *:not(#orientation-message):not(.fullscreen-btn) {
-        display: none; /* Oculta todo el contenido excepto el mensaje y el botón */
-      }
-      #orientation-message {
-        display: block;
-      }
-      .fullscreen-btn {
-        display: block; /* Mostrar botón solo en vertical */
-      }
-    }
-
-    /* Ocultar mensaje y botón en modo horizontal */
-    @media (orientation: landscape) {
-      #orientation-message {
-        display: none;
-      }
-      .fullscreen-btn {
-        display: none; /* Ocultar botón en horizontal */
-      }
-    }
-
-    /* Ajuste para móviles */
-    @media (max-width: 600px) {
-      .fullscreen-btn {
-        padding: 8px 12px;
-        font-size: 14px;
-      }
-      #orientation-message {
-        font-size: 30px;
-        font-family: nunito, sans-serif;
-        text-align: center;
-        padding-top: 40%;
-        padding-left: 10%;
-        padding-right: 10%;
-        /* Ajustar para que el mensaje no sea tapado por el botón */
-      }
-    }
   </style>
 </head>
-
 <body>
   <!-- Mensaje de orientación -->
   <div id="orientation-message">
@@ -109,47 +30,41 @@
       <path d="M7 14H5V19H10V17H7V14ZM5 10H7V7H10V5H5V10ZM17 17H14V19H19V14H17V17ZM14 5V7H17V10H19V5H14Z" fill="#F0F7FF"/>
     </svg>
   </button>
-  
   <!-- Loading Screen -->
   <div id="loading-screen">
-    <h1>Cargando...</h1>
+    <h1>Loading...</h1>
+  </div>
   
-    <div class="video-container">
-      <canvas id="overlay"></canvas>
-      <a-scene mindar-image="imageTargetSrc:../targets.mind;filterMinCF:0.0001; filterBeta: 10" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
-        <a-assets>
-          <a-asset-item id="recoleccion" src="../assets/1.glb"></a-asset-item>
-          <a-asset-item id="evaporacion" src="../assets/2.glb"></a-asset-item>
-          <a-asset-item id="condensacion" src="../assets/3.glb"></a-asset-item>
-          <a-asset-item id="presipitacion" src="../assets/4.glb"></a-asset-item>
-        </a-assets>
-        <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+  <div class="video-container">
+    <canvas id="overlay"></canvas>
+    <a-scene mindar-image="imageTargetSrc:../targets.mind;filterMinCF:0.0001; filterBeta: 10" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
+      <a-assets>
+        <a-asset-item id="recoleccion" src="../assets/1.glb"></a-asset-item>
+        <a-asset-item id="evaporacion" src="../assets/2.glb"></a-asset-item>
+        <a-asset-item id="condensacion" src="../assets/3.glb"></a-asset-item>
+        <a-asset-item id="presipitacion" src="../assets/4.glb"></a-asset-item>
+      </a-assets>
+      <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
-        <a-entity mindar-image-target="targetIndex: 0">
-          <a-gltf-model src="#recoleccion" position="0 0 0" scale="1 1 1" rotation="0 0 0" animation-mixer></a-gltf-model>
-        </a-entity>
-        <a-entity mindar-image-target="targetIndex: 1">
-          <a-gltf-model src="#evaporacion" position="0 0 0" scale="1 1 1" rotation="0 0 0" animation-mixer></a-gltf-model>
-        </a-entity>
-        <a-entity mindar-image-target="targetIndex: 2">
-          <a-gltf-model src="#condensacion" position="0 0 0" scale="1 1 1" rotation="0 0 0" animation-mixer></a-gltf-model>
-        </a-entity>
-        <a-entity mindar-image-target="targetIndex: 3">
-          <a-gltf-model src="#presipitacion" position="0 0 0" scale="1 1 1" rotation="0 0 0" animation-mixer></a-gltf-model>
-        </a-entity>
-      </a-scene>
-    </div>
+      <a-entity mindar-image-target="targetIndex: 0">
+        <a-gltf-model src="#recoleccion" position="0 0 0" scale="1 1 1" rotation="0 0 0" animation-mixer></a-gltf-model>
+      </a-entity>
+      <a-entity mindar-image-target="targetIndex: 1">
+        <a-gltf-model src="#evaporacion" position="0 0 0" scale="1 1 1" rotation="0 0 0" animation-mixer></a-gltf-model>
+      </a-entity>
+      <a-entity mindar-image-target="targetIndex: 2">
+        <a-gltf-model src="#condensacion" position="0 0 0" scale="1 1 1" rotation="0 0 0" animation-mixer></a-gltf-model>
+      </a-entity>
+      <a-entity mindar-image-target="targetIndex: 3">
+        <a-gltf-model src="#presipitacion" position="0 0 0" scale="1 1 1" rotation="0 0 0" animation-mixer></a-gltf-model>
+      </a-entity>
+    </a-scene>
+
+    <!-- Botón de pantalla completa -->
+    <button class="fullscreen-btn" onclick="toggleFullScreen()">Pantalla Completa</button>
   </div>
 
   <script>
-    // Intentar forzar orientación horizontal (si el navegador lo soporta)
-    if (screen.orientation && screen.orientation.lock) {
-      screen.orientation.lock('landscape').catch(err => {
-        console.log('No se pudo bloquear la orientación:', err);
-      });
-    }
-
-    // Función para pantalla completa
     function toggleFullScreen() {
       const elem = document.documentElement;
       if (!document.fullscreenElement) {
@@ -173,6 +88,6 @@
   </script>
 
   <script src="../js/loadingScreen.js"></script>
-  
+  <script src="../js/captura.js"></script>
 </body>
 </html>
