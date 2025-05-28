@@ -16,11 +16,12 @@ body {
 }
 
 /* Contenedor principal del video */
-.video-container {
+.video-container, .output_canvas, .input_video {
   position: relative;
   width: 100%;
+  
   height: 100vh; 
-  overflow: visible;
+  overflow: hidden;
 }
 
 /* Estilo del reproductor de video */
