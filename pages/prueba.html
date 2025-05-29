@@ -78,7 +78,7 @@
           }
           // Bloquear orientación a horizontal (landscape)
           if (window.screen.orientation && window.screen.orientation.lock) {
-            window.screen.orientation.lock('landscape').catch(err => {
+            window.screen.orientation.lock('portrait').catch(err => {
               console.warn('No se pudo bloquear la orientación:', err);
             });
           }
