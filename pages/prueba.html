@@ -14,14 +14,12 @@
     .a-enter-vr-button {
       display: none !important;
     }
-
-
   </style>
 </head>
 <body>
   <!-- Mensaje de orientación -->
   <div id="orientation-message">
-    Activa la pantalla completa y rota tu dispositivo a modo horizontal para continuar.
+    Activa la pantalla completa para continuar.
   </div>
   
   <!-- Botón de pantalla completa -->
@@ -59,43 +57,69 @@
         <a-gltf-model src="#presipitacion" position="0 0 0" scale="1 1 1" rotation="0 0 0" animation-mixer></a-gltf-model>
       </a-entity>
     </a-scene>
-
-    <!-- Botón de pantalla completa -->
-    <button class="fullscreen-btn" onclick="toggleFullScreen()">Pantalla Completa</button>
   </div>
 
   <script>
     function toggleFullScreen() {
       const elem = document.documentElement;
+      const message = document.querySelector('#orientation-message');
+      const videoContainer = document.querySelector('.video-container');
+      const fullscreenBtn = document.querySelector('.fullscreen-btn');
+
       if (!document.fullscreenElement) {
-        if (elem.requestFullscreen) {
-          elem.requestFullscreen();
-        } else if (elem.webkitRequestFullscreen) { /* Safari */
-          elem.webkitRequestFullscreen();
-        } else if (elem.msRequestFullscreen) { /* IE11 */
-          elem.msRequestFullscreen();
+        try {
+          if (elem.requestFullscreen) {
+            elem.requestFullscreen();
+          } else if (elem.webkitRequestFullscreen) { /* Safari */
+            elem.webkitRequestFullscreen();
+          } else if (elem.msRequestFullscreen) { /* IE11 */
+            elem.msRequestFullscreen();
+          }
+          // Oculta el mensaje y muestra el contenido
+          if (message) {
+            message.style.display = 'none';
+          }
+          if (videoContainer) {
+            videoContainer.style.display = 'block';
+          }
+          // Mueve el botón a la esquina inferior derecha
+          if (fullscreenBtn) {
+            fullscreenBtn.style.top = 'auto';
+            fullscreenBtn.style.bottom = '20px';
+            fullscreenBtn.style.right = '20px';
+          }
+        } catch (err) {
+          console.error('Error al activar pantalla completa:', err);
         }
       } else {
-        if (document.exitFullscreen) {
-          document.exitFullscreen();
-        } else if (document.webkitExitFullscreen) { /* Safari */
-          document.webkitExitFullscreen();
-        } else if (document.msExitFullscreen) { /* IE11 */
-          document.msExitFullscreen();
+        try {
+          if (document.exitFullscreen) {
+            document.exitFullscreen();
+          } else if (document.webkitExitFullscreen) { /* Safari */
+            document.webkitExitFullscreen();
+          } else if (document.msExitFullscreen) { /* IE11 */
+            document.msExitFullscreen();
+          }
+          // Muestra el mensaje y oculta el contenido
+          if (message) {
+            message.style.display = 'block';
+          }
+          if (videoContainer) {
+            videoContainer.style.display = 'none';
+          }
+          // Restaura la posición original del botón
+          if (fullscreenBtn) {
+            fullscreenBtn.style.top = '60%';
+            fullscreenBtn.style.bottom = 'auto';
+            fullscreenBtn.style.right = '40%';
+          }
+        } catch (err) {
+          console.error('Error al salir de pantalla completa:', err);
         }
       }
     }
-    window.addEventListener('orientationchange', () => {
-  const scene = document.querySelector('a-scene');
-  if (scene) {
-    scene.sceneEl.reload(); // Reinicia la escena AR
-    console.log('Escena reiniciada tras cambio de orientación');
-  }
-});
   </script>
 
   <script src="../js/loadingScreen.js"></script>
-
-  
 </body>
 </html>

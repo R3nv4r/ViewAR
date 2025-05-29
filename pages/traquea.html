@@ -3,25 +3,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
-    <style>
-      a-scene {
-        transform: rotate(90deg);
-        transform-origin: center center;
-        width: 100vh !important;
-        height: 100vw !important;
-        position: absolute;
-        top: 0;
-        left: 0;
-        overflow: hidden;
-      }
-      body, html {
-        overflow: hidden;
-        margin: 0;
-        padding: 0;
-        width: 100vw;
-        height: 100vh;
-      }
-    </style>
+    
   </head>
   <body>
     <a-scene mindar-image="imageTargetSrc: https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.5/examples/image-tracking/assets/card-example/card.mind;" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">

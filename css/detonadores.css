@@ -19,9 +19,9 @@ body {
 .video-container, .output_canvas, .input_video {
   position: relative;
   width: 100%;
-  
   height: 100vh; 
   overflow: hidden;
+  
 }
 
 /* Estilo del reproductor de video */
@@ -128,15 +128,6 @@ body {
   }
 }
 
-@media screen and (orientation: portrait) {
-  body {
-      display: block;
-  }
-  body > *:not(#orientation-message):not(.fullscreen-btn):not(#loading-screen) {
-    display: none; /* Keep loading screen visible in portrait */
-  }
-}
-
 /* Contenido de realidad aumentada */
 a-scene video {
   position: absolute;
@@ -152,7 +143,7 @@ a-scene video {
 a-scene {
   width: 100%;
   height: 100%;
-  display: block !important; /* Ensure scene is visible in landscape */
+  display: block !important; /* Ensure scene is visible when container is shown */
 }
 
 /* Contenedor de la escena AR */
@@ -207,8 +198,6 @@ a-scene {
   animation: fadeInOut 2s infinite; /* Add fade-in-out animation */
 }
 
-
-
 /* Fade-in-out animation for the text */
 @keyframes fadeInOut {
   0%, 100% {
@@ -226,7 +215,6 @@ a-scene {
 
 /* Estilo para el botón de pantalla completa */
 .fullscreen-btn {
-  display: none; /* Oculto por defecto */
   position: fixed;
   top: 60%;
   right: 40%;
@@ -238,7 +226,7 @@ a-scene {
   border-radius: 5px;
   cursor: pointer;
   font-size: 16px;
-  transition: background-color 0.3s;
+  transition: background-color 0.3s, top 0.3s, right 0.3s, bottom 0.3s;
 }
 
 .fullscreen-btn:hover {
@@ -247,7 +235,6 @@ a-scene {
 
 /* Mensaje para forzar orientación horizontal */
 #orientation-message {
-  display: none;
   position: fixed;
   top: 0;
   left: 0;
@@ -259,29 +246,6 @@ a-scene {
   padding-top: 40%;
   font-size: 18px;
   z-index: 1000; /* Debajo del botón de pantalla completa */
-}
-
-/* Mostrar mensaje y botón en modo vertical */
-@media (orientation: portrait) {
-  #orientation-message {
-    display: block;
-  }
-  .fullscreen-btn {
-    display: block; /* Mostrar botón solo en vertical */
-  }
-}
-
-/* Ocultar mensaje y botón en modo horizontal */
-@media (orientation: landscape) {
-  #orientation-message {
-    display: none;
-  }
-  .fullscreen-btn {
-    display: none; /* Ocultar botón en horizontal */
-  }
-  .video-container, a-scene {
-    display: block !important; /* Ensure visibility in landscape */
-  }
 }
 
 /* Ajuste para móviles */
@@ -297,6 +261,5 @@ a-scene {
     padding-top: 40%;
     padding-left: 10%;
     padding-right: 10%;
-    /* Ajustar para que el mensaje no sea tapado por el botón */
   }
 }
