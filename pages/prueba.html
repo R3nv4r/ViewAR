@@ -68,12 +68,19 @@
 
       if (!document.fullscreenElement) {
         try {
+          // Activar pantalla completa
           if (elem.requestFullscreen) {
             elem.requestFullscreen();
           } else if (elem.webkitRequestFullscreen) { /* Safari */
             elem.webkitRequestFullscreen();
           } else if (elem.msRequestFullscreen) { /* IE11 */
             elem.msRequestFullscreen();
+          }
+          // Bloquear orientación a horizontal (landscape)
+          if (window.screen.orientation && window.screen.orientation.lock) {
+            window.screen.orientation.lock('landscape').catch(err => {
+              console.warn('No se pudo bloquear la orientación:', err);
+            });
           }
           // Oculta el mensaje y muestra el contenido
           if (message) {
@@ -93,12 +100,19 @@
         }
       } else {
         try {
+          // Salir de pantalla completa
           if (document.exitFullscreen) {
             document.exitFullscreen();
           } else if (document.webkitExitFullscreen) { /* Safari */
             document.webkitExitFullscreen();
           } else if (document.msExitFullscreen) { /* IE11 */
             document.msExitFullscreen();
+          }
+          // Desbloquear orientación
+          if (window.screen.orientation && window.screen.orientation.unlock) {
+            window.screen.orientation.unlock().catch(err => {
+              console.warn('No se pudo desbloquear la orientación:', err);
+            });
           }
           // Muestra el mensaje y oculta el contenido
           if (message) {
