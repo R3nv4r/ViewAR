@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function () {
             // Wait for the fade-out transition to complete before hiding the element
             setTimeout(() => {
                 loadingScreen.style.display = 'none';
-            }, 3000); // Match the duration of the CSS transition
+            }, 5000); // Match the duration of the CSS transition
         }
     }
 
