@@ -67,81 +67,111 @@
   </div>
 
   <script>
-    function toggleFullScreen() {
-      const elem = document.documentElement;
-      const message = document.querySelector('#orientation-message');
-      const videoContainer = document.querySelector('.video-container');
-      const fullscreenBtn = document.querySelector('.fullscreen-btn');
+function toggleFullScreen() {
+  const elem = document.documentElement;
+  const message = document.querySelector('#orientation-message');
+  const videoContainer = document.querySelector('.video-container');
+  const fullscreenBtn = document.querySelector('.fullscreen-btn');
 
-      if (!document.fullscreenElement) {
-        try {
-          // Activar pantalla completa
-          if (elem.requestFullscreen) {
-            elem.requestFullscreen();
-          } else if (elem.webkitRequestFullscreen) { /* Safari */
-            elem.webkitRequestFullscreen();
-          } else if (elem.msRequestFullscreen) { /* IE11 */
-            elem.msRequestFullscreen();
-          }
-          // Bloquear orientación a portrait
-          if (window.screen.orientation && window.screen.orientation.lock) {
-            window.screen.orientation.lock('portrait').then(
-              () => console.log('Orientación bloqueada a portrait'),
-              (err) => console.warn('No se pudo bloquear la orientación:', err)
-            );
-          } else {
-            console.warn('La API de bloqueo de orientación no está soportada en este dispositivo/navegador');
-          }
-          // Oculta el mensaje y muestra el contenido
-          if (message) {
-            message.style.display = 'none';
-          }
-          if (videoContainer) {
-            videoContainer.style.display = 'block';
-          }
-          // Mueve el botón a la esquina inferior derecha
-          if (fullscreenBtn) {
-            fullscreenBtn.style.top = 'auto';
-            fullscreenBtn.style.bottom = '20px';
-            fullscreenBtn.style.right = '20px';
-          }
-        } catch (err) {
-          console.error('Error al activar pantalla completa:', err);
-        }
-      } else {
-        try {
-          // Salir de pantalla completa
-          if (document.exitFullscreen) {
-            document.exitFullscreen();
-          } else if (document.webkitExitFullscreen) { /* Safari */
-            document.webkitExitFullscreen();
-          } else if (document.msExitFullscreen) { /* IE11 */
-            document.msExitFullscreen();
-          }
-          // Desbloquear orientación
-          if (window.screen.orientation && window.screen.orientation.unlock) {
-            window.screen.orientation.unlock().catch(err => {
-              console.warn('No se pudo desbloquear la orientación:', err);
-            });
-          }
-          // Muestra el mensaje y oculta el contenido
-          if (message) {
-            message.style.display = 'block';
-          }
-          if (videoContainer) {
-            videoContainer.style.display = 'none';
-          }
-          // Restaura la posición original del botón
-          if (fullscreenBtn) {
-            fullscreenBtn.style.top = '60%';
-            fullscreenBtn.style.bottom = 'auto';
-            fullscreenBtn.style.right = '40%';
-          }
-        } catch (err) {
-          console.error('Error al salir de pantalla completa:', err);
-        }
+  if (!document.fullscreenElement) {
+    try {
+      // Activar pantalla completa
+      if (elem.requestFullscreen) {
+        elem.requestFullscreen();
+      } else if (elem.webkitRequestFullscreen) {
+        elem.webkitRequestFullscreen();
+      } else if (elem.msRequestFullscreen) {
+        elem.msRequestFullscreen();
       }
+      // Bloquear orientación a portrait
+      if (window.screen.orientation && window.screen.orientation.lock) {
+        window.screen.orientation.lock('portrait').then(
+          () => console.log('Orientación bloqueada a portrait'),
+          (err) => console.warn('No se pudo bloquear la orientación:', err)
+        );
+      }
+      // Oculta el mensaje y muestra el contenido
+      if (message) {
+        message.style.display = 'none';
+      }
+      if (videoContainer) {
+        videoContainer.style.display = 'block';
+      }
+      if (fullscreenBtn) {
+        fullscreenBtn.style.top = 'auto';
+        fullscreenBtn.style.bottom = '20px';
+        fullscreenBtn.style.right = '20px';
+      }
+    } catch (err) {
+      console.error('Error al activar pantalla completa:', err);
     }
+  } else {
+    try {
+      // Salir de pantalla completa
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+      } else if (document.msExitFullscreen) {
+        document.msExitFullscreen();
+      }
+      // Desbloquear orientación
+      if (window.screen.orientation && window.screen.orientation.unlock) {
+        window.screen.orientation.unlock().catch(err => {
+          console.warn('No se pudo desbloquear la orientación:', err);
+        });
+      }
+      // Muestra el mensaje y oculta el contenido
+      if (message) {
+        setTimeout(() => {
+          message.style.display = 'block';
+          message.style.visibility = 'visible';
+          message.style.opacity = '1';
+        }, 0);
+      } else {
+        console.warn('El elemento #orientation-message no se encontró');
+      }
+      if (videoContainer) {
+        videoContainer.style.display = 'none';
+      }
+      if (fullscreenBtn) {
+        fullscreenBtn.style.top = '60%';
+        fullscreenBtn.style.bottom = 'auto';
+        fullscreenBtn.style.right = '40%';
+      }
+    } catch (err) {
+      console.error('Error al salir de pantalla completa:', err);
+    }
+  }
+}
+
+// Listener para manejar cambios en pantalla completa
+document.addEventListener('fullscreenchange', () => {
+  const message = document.querySelector('#orientation-message');
+  const videoContainer = document.querySelector('.video-container');
+  const fullscreenBtn = document.querySelector('.fullscreen-btn');
+
+  if (!document.fullscreenElement) {
+    console.log('Saliendo de pantalla completa');
+    if (message) {
+      setTimeout(() => {
+        message.style.display = 'block';
+        message.style.visibility = 'visible';
+        message.style.opacity = '1';
+      }, 0);
+    } else {
+      console.warn('El elemento #orientation-message no se encontró');
+    }
+    if (videoContainer) {
+      videoContainer.style.display = 'none';
+    }
+    if (fullscreenBtn) {
+      fullscreenBtn.style.top = '60%';
+      fullscreenBtn.style.bottom = 'auto';
+      fullscreenBtn.style.right = '40%';
+    }
+  }
+});
   </script>
 
   <script src="../js/loadingScreen.js"></script>
