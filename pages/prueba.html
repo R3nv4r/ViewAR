@@ -40,15 +40,16 @@
     <canvas id="overlay"></canvas>
     <a-scene mindar-image="imageTargetSrc:../targets.mind;filterMinCF:0.001; filterBeta: 5; uiScanning: no" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled:false">
       <a-assets>
-        <a-asset-item id="recoleccion" src="../assets/esc.glb"></a-asset-item>
+        <a-asset-item id="escurrimiento" src="../assets/esc.glb"></a-asset-item>
         <a-asset-item id="evaporacion" src="../assets/eva.glb"></a-asset-item>
         <a-asset-item id="condensacion" src="../assets/cond.glb"></a-asset-item>
         <a-asset-item id="presipitacion" src="../assets/pre.glb"></a-asset-item>
         <a-asset-item id="infiltracion" src="../assets/inf.glb"></a-asset-item>
       </a-assets>
+
       <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
       <a-entity mindar-image-target="targetIndex: 0">
-        <a-gltf-model src="#recoleccion" position="0 0 0" scale="1 1 1" rotation="0 0 0" animation-mixer></a-gltf-model>
+        <a-gltf-model src="#escurrimiento" position="0 0 0" scale="1 1 1" rotation="0 0 0" animation-mixer></a-gltf-model>
       </a-entity>
       <a-entity mindar-image-target="targetIndex: 1">
         <a-gltf-model src="#evaporacion" position="0 0 0" scale="1 1 1" rotation="0 0 0" animation-mixer></a-gltf-model>
@@ -58,6 +59,9 @@
       </a-entity>
       <a-entity mindar-image-target="targetIndex: 3">
         <a-gltf-model src="#presipitacion" position="0 0 0" scale="1 1 1" rotation="0 0 0" animation-mixer></a-gltf-model>
+      </a-entity>
+      <a-entity mindar-image-target="targetIndex: 4">
+        <a-gltf-model src="#infiltracion" position="0 0 0" scale="1 1 1" rotation="0 0 0" animation-mixer></a-gltf-model>
       </a-entity>
     </a-scene>
   </div>
