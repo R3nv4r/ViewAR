@@ -73,41 +73,22 @@ body {
   z-index: 10;
 }
 
-#save-button svg {
-  width: 100px;
-  height: 100px;
-  stroke: #798ea5;
-  fill: none;
-  transition: stroke 0.3s;
+#save-button img {
+  width: 120px;
+  height: 120px;
+ 
+  filter: invert(58%) sepia(11%) saturate(996%) hue-rotate(178deg) brightness(95%) contrast(86%); /* Tono similar al #798ea5 original */
+  transition: filter 0.3s ease;
 }
 
-#save-button .default-svg, #save-button .active-svg {
-  transition: opacity 0.2s ease;
-  position: absolute;
+#save-button:hover img {
+  /* Tono similar al #0056b3 del hover original */
+  filter: invert(24%) sepia(84%) saturate(3070%) hue-rotate(198deg) brightness(96%) contrast(101%);
 }
 
-#save-button .default-svg {
-  display: block;
-  opacity: 1;
-}
-
-#save-button .active-svg {
-  display: none;
-  opacity: 0;
-}
-
-#save-button:active .default-svg {
-  display: none;
-  opacity: 0;
-}
-
-#save-button:active .active-svg {
-  display: block;
-  opacity: 1;
-}
-
-#save-button:hover svg {
-  stroke: #0056b3;
+#save-button:active img {
+  /* Efecto al presionar, por ejemplo, hacerlo un poco más brillante u opaco */
+  filter: brightness(1.2);
 }
 
 .controls {
@@ -117,7 +98,7 @@ body {
   margin-top: 10px;
   flex-direction: row;
   position: absolute;
-  bottom: 50px;
+  bottom: 2%;
   z-index: 10;
 }
 

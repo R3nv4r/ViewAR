@@ -3,19 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>RA detonadores</title>
-  <link rel="stylesheet" href="../css/detonadores.css"> 
+  <title>VisioAR-Casa del Agua</title>
+  <link rel="stylesheet" href="css/detonadores.css"> 
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
   <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v7.0.0/dist/aframe-extras.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
   
-  <style>
-    /* Oculta el botón de VR de A-Frame */
-    .a-enter-vr-button {
-      display: none !important;
-    }
-  </style>
+
 </head>
 <body>
   <!-- Mensaje de orientación -->
@@ -33,35 +28,36 @@
   <div id="loading-screen">
     <h1>Cargando...</h1>
 
-    <img src="../assets/carga.gif" alt="Cargando..." sizes="200px" style="width: 200px; height: 100px;">
+    <img src="assets/carga.gif" alt="Cargando..." sizes="200px" style="width: 200px; height: 100px;">
   </div>
   
   <div class="video-container">
     <canvas id="overlay"></canvas>
-    <a-scene mindar-image="imageTargetSrc:../targets.mind;filterMinCF:0.001; filterBeta: 5; uiScanning: no" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled:false">
+    <a-scene mindar-image="imageTargetSrc:targets.mind;filterMinCF:0.001; filterBeta: 5; uiScanning: no" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled:false">
       <a-assets>
-        <a-asset-item id="escurrimiento" src="../assets/pr/1escurrimiento.glb"></a-asset-item>
-        <a-asset-item id="evaporacion" src="../assets/pr/1evaporacion.glb"></a-asset-item>
-        <a-asset-item id="condensacion" src="../assets/pr/1condensacion.glb"></a-asset-item>
-        <a-asset-item id="presipitacion" src="../assets/pr/1precipitacion.glb"></a-asset-item>
-        <a-asset-item id="infiltracion" src="../assets/pr/1infiltracion.glb"></a-asset-item>
+        <a-asset-item id="escurrimiento" src="assets/pr/1escurrimiento.glb"></a-asset-item>
+        <a-asset-item id="evaporacion" src="assets/pr/1evaporacion.glb"></a-asset-item>
+        <a-asset-item id="condensacion" src="assets/pr/1condensacion.glb"></a-asset-item>
+        <a-asset-item id="presipitacion" src="assets/pr/1precipitacion.glb"></a-asset-item>
+        <a-asset-item id="infiltracion" src="assets/pr/1infiltracion.glb"></a-asset-item>
       </a-assets>
 
       <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
-       <a-entity mindar-image-target="targetIndex: 0">
-        <a-gltf-model src="#escurrimiento" position="0 0 0" scale="0.5 0.5 0.5" rotation="0 0 0" animation-mixer></a-gltf-model>
-      </a-entity>
-      <a-entity mindar-image-target="targetIndex: 1">
+       
+      <a-entity mindar-image-target="targetIndex: 0">
         <a-gltf-model src="#evaporacion" position="0 0 0" scale="0.3 0.3 0.3"rotation="0 0 0" animation-mixer></a-gltf-model>
       </a-entity>
-      <a-entity mindar-image-target="targetIndex: 2">
+      <a-entity mindar-image-target="targetIndex: 1">
         <a-gltf-model src="#condensacion" position="0 0 0" scale="0.3 0.3 0.3" rotation="0 0 0" animation-mixer></a-gltf-model>
       </a-entity>
-      <a-entity mindar-image-target="targetIndex: 3">
+      <a-entity mindar-image-target="targetIndex: 2">
         <a-gltf-model src="#presipitacion" position="0 0 0" scale="0.3 0.3 0.3" rotation="0 0 0" animation-mixer></a-gltf-model>
       </a-entity>
-      <a-entity mindar-image-target="targetIndex: 4">
+      <a-entity mindar-image-target="targetIndex: 3">
         <a-gltf-model src="#infiltracion" position="0 0 0" scale="0.7 0.7 0.7" rotation="0 -90 0" animation-mixer></a-gltf-model>
+      </a-entity>
+      <a-entity mindar-image-target="targetIndex: 4">
+        <a-gltf-model src="#escurrimiento" position="0 0 0" scale="0.3 0.3 0.3" rotation="0 0 0" animation-mixer></a-gltf-model>
       </a-entity>
     </a-scene>
   </div>
@@ -134,11 +130,7 @@ function toggleFullScreen() {
       if (videoContainer) {
         videoContainer.style.display = 'none';
       }
-      if (fullscreenBtn) {
-        fullscreenBtn.style.top = '60%';
-        fullscreenBtn.style.bottom = 'auto';
-        fullscreenBtn.style.right = '40%';
-      }
+      
     } catch (err) {
       console.error('Error al salir de pantalla completa:', err);
     }
@@ -168,12 +160,12 @@ document.addEventListener('fullscreenchange', () => {
     if (fullscreenBtn) {
       fullscreenBtn.style.top = '60%';
       fullscreenBtn.style.bottom = 'auto';
-      fullscreenBtn.style.right = '40%';
+      fullscreenBtn.style.right = 'auto';
     }
   }
 });
   </script>
 
-  <script src="../js/loadingScreen.js"></script>
+  <script src="js/loadingScreen.js"></script>
 </body>
 </html>
