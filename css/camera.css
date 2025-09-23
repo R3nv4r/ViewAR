@@ -66,7 +66,7 @@ body {
   border: none;
   cursor: pointer;
   margin-bottom: 10px;
-  padding: 50px;
+  padding: 5px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -74,8 +74,8 @@ body {
 }
 
 #save-button img {
-  width: 120px;
-  height: 120px;
+  width: 100px;
+  height: 100px;
  
   filter: invert(58%) sepia(11%) saturate(996%) hue-rotate(178deg) brightness(95%) contrast(86%); /* Tono similar al #798ea5 original */
   transition: filter 0.3s ease;
