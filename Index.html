@@ -3,45 +3,169 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>Menú Principal</title>
-  <link rel="stylesheet" href="css/style.css">
+  <title>VisioAR-Casa del Agua</title>
+  <link rel="stylesheet" href="css/detonadores.css"> 
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v7.0.0/dist/aframe-extras.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+  
+
 </head>
 <body>
-  <h1>Menú Principal</h1>
+  <!-- Mensaje de orientación -->
+  <div id="orientation-message">
+    Activa la pantalla completa para continuar.
+  </div>
+  
+  <!-- Botón de pantalla completa -->
+  <button class="fullscreen-btn" onclick="toggleFullScreen()">
+    <svg width="60" height="60" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M7 14H5V19H10V17H7V14ZM5 10H7V7H10V5H5V10ZM17 17H14V19H19V14H17V17ZM14 5V7H17V10H19V5H14Z" fill="#F0F7FF"/>
+    </svg>
+  </button>
+  <!-- Pantalla de carga -->
+  <div id="loading-screen">
+    <h1>Cargando...</h1>
 
-  <div class="menu-container">
-    <button onclick="window.location.href='pages/prueba.html'">Realidad Aumentada con Imágenes</button>
-    <button onclick="window.location.href='pages/Face.html'">Realidad aumentada sobre rostro</button>
-    <button onclick="window.location.href='pages/Mano.html'">Realidad aumentada sobre mano</button>
-    <button onclick="toggleFullScreen()">Pantalla Completa</button>
+    <img src="assets/carga.gif" alt="Cargando..." sizes="200px" style="width: 200px; height: 100px;">
+  </div>
+  
+  <div class="video-container">
+    <canvas id="overlay"></canvas>
+    <a-scene mindar-image="imageTargetSrc:targets.mind;filterMinCF:0.001; filterBeta: 5; uiScanning: no" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled:false">
+      <a-assets>
+        <a-asset-item id="escurrimiento" src="assets/pr/1escurrimiento.glb"></a-asset-item>
+        <a-asset-item id="evaporacion" src="assets/pr/1evaporacion.glb"></a-asset-item>
+        <a-asset-item id="condensacion" src="assets/pr/1condensacion.glb"></a-asset-item>
+        <a-asset-item id="presipitacion" src="assets/pr/1precipitacion.glb"></a-asset-item>
+        <a-asset-item id="infiltracion" src="assets/pr/1infiltracion.glb"></a-asset-item>
+      </a-assets>
+
+      <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+       
+      <a-entity mindar-image-target="targetIndex: 0">
+        <a-gltf-model src="#evaporacion" position="0 0 0" scale="0.1 0.1 0.1"rotation="0 0 0" animation-mixer></a-gltf-model>
+      </a-entity>
+      <a-entity mindar-image-target="targetIndex: 1">
+        <a-gltf-model src="#condensacion" position="0 0 0" scale="0.1 0.1 0.1" rotation="0 0 0" animation-mixer></a-gltf-model>
+      </a-entity>
+      <a-entity mindar-image-target="targetIndex: 2">
+        <a-gltf-model src="#presipitacion" position="0 0 0" scale="0.1 0.1 0.1" rotation="0 0 0" animation-mixer></a-gltf-model>
+      </a-entity>
+      <a-entity mindar-image-target="targetIndex: 3">
+        <a-gltf-model src="#infiltracion" position="0 0 0" scale="0.1 0.1 0.1" rotation="0 -90 0" animation-mixer></a-gltf-model>
+      </a-entity>
+      <a-entity mindar-image-target="targetIndex: 4">
+        <a-gltf-model src="#escurrimiento" position="0 0 0" scale="0.1 0.1 0.1" rotation="0 0 0" animation-mixer></a-gltf-model>
+      </a-entity>
+    </a-scene>
   </div>
 
   <script>
-    function toggleFullScreen() {
-      // Selecciona el elemento que quieres poner en pantalla completa (en este caso, el <body>)
-      const elem = document.documentElement;
+function toggleFullScreen() {
+  const elem = document.documentElement;
+  const message = document.querySelector('#orientation-message');
+  const videoContainer = document.querySelector('.video-container');
+  const fullscreenBtn = document.querySelector('.fullscreen-btn');
 
-      // Verifica si ya está en pantalla completa
-      if (!document.fullscreenElement) {
-        // Solicita pantalla completa
-        if (elem.requestFullscreen) {
-          elem.requestFullscreen();
-        } else if (elem.webkitRequestFullscreen) { /* Safari */
-          elem.webkitRequestFullscreen();
-        } else if (elem.msRequestFullscreen) { /* IE11 */
-          elem.msRequestFullscreen();
-        }
-      } else {
-        // Sale de pantalla completa
-        if (document.exitFullscreen) {
-          document.exitFullscreen();
-        } else if (document.webkitExitFullscreen) { /* Safari */
-          document.webkitExitFullscreen();
-        } else if (document.msExitFullscreen) { /* IE11 */
-          document.msExitFullscreen();
-        }
+  if (!document.fullscreenElement) {
+    try {
+      // Activar pantalla completa
+      if (elem.requestFullscreen) {
+        elem.requestFullscreen();
+      } else if (elem.webkitRequestFullscreen) {
+        elem.webkitRequestFullscreen();
+      } else if (elem.msRequestFullscreen) {
+        elem.msRequestFullscreen();
       }
+      // Bloquear orientación a portrait
+      if (window.screen.orientation && window.screen.orientation.lock) {
+        window.screen.orientation.lock('portrait').then(
+          () => console.log('Orientación bloqueada a portrait'),
+          (err) => console.warn('No se pudo bloquear la orientación:', err)
+        );
+      }
+      // Oculta el mensaje y muestra el contenido
+      if (message) {
+        message.style.display = 'none';
+      }
+      if (videoContainer) {
+        videoContainer.style.display = 'block';
+      }
+      if (fullscreenBtn) {
+        fullscreenBtn.style.top = 'auto';
+        fullscreenBtn.style.bottom = '20px';
+        fullscreenBtn.style.right = '20px';
+      }
+    } catch (err) {
+      console.error('Error al activar pantalla completa:', err);
     }
+  } else {
+    try {
+      // Salir de pantalla completa
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+      } else if (document.msExitFullscreen) {
+        document.msExitFullscreen();
+      }
+      // Desbloquear orientación
+      if (window.screen.orientation && window.screen.orientation.unlock) {
+        window.screen.orientation.unlock().catch(err => {
+          console.warn('No se pudo desbloquear la orientación:', err);
+        });
+      }
+      // Muestra el mensaje y oculta el contenido
+      if (message) {
+        setTimeout(() => {
+          message.style.display = 'block';
+          message.style.visibility = 'visible';
+          message.style.opacity = '1';
+        }, 0);
+      } else {
+        console.warn('El elemento #orientation-message no se encontró');
+      }
+      if (videoContainer) {
+        videoContainer.style.display = 'none';
+      }
+      
+    } catch (err) {
+      console.error('Error al salir de pantalla completa:', err);
+    }
+  }
+}
+
+// Listener para manejar cambios en pantalla completa
+document.addEventListener('fullscreenchange', () => {
+  const message = document.querySelector('#orientation-message');
+  const videoContainer = document.querySelector('.video-container');
+  const fullscreenBtn = document.querySelector('.fullscreen-btn');
+
+  if (!document.fullscreenElement) {
+    console.log('Saliendo de pantalla completa');
+    if (message) {
+      setTimeout(() => {
+        message.style.display = 'block';
+        message.style.visibility = 'visible';
+        message.style.opacity = '1';
+      }, 0);
+    } else {
+      console.warn('El elemento #orientation-message no se encontró');
+    }
+    if (videoContainer) {
+      videoContainer.style.display = 'none';
+    }
+    if (fullscreenBtn) {
+      fullscreenBtn.style.top = '60%';
+      fullscreenBtn.style.bottom = 'auto';
+      fullscreenBtn.style.right = 'auto';
+    }
+  }
+});
   </script>
+
+  <script src="js/loadingScreen.js"></script>
 </body>
 </html>

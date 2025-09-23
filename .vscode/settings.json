@@ -1,3 +1,4 @@
 {
-    "livePreview.defaultPreviewPath": "/pages/Mano.html"
+    "livePreview.defaultPreviewPath": "/pages/Mano.html",
+    "liveServer.settings.port": 5502
 }
